@@ -162,8 +162,11 @@
 <body>
 
 <div class="header">
-  <div class="header-top"><h1>Svensexa</h1><span style="font-size:22px">🍺</span></div>
-  <p class="header-sub">Stockholm → Köln &nbsp;·&nbsp; 2025</p>
+  <div class="header-top">
+    <h1>Svensexa</h1><span style="font-size:22px">🍺</span>
+    <button onclick="exportHTML()" style="margin-left:auto;background:none;border:1px solid rgba(239,159,39,0.3);color:#EF9F27;font-size:11px;font-family:'Courier New',monospace;padding:5px 12px;border-radius:6px;cursor:pointer;letter-spacing:0.04em;" title="Ladda ner uppdaterad HTML för GitHub">↓ Exportera</button>
+  </div>
+  <p class="header-sub">Stockholm → Köln &nbsp;·&nbsp; 2026</p>
 </div>
 
 <div class="tabs">
@@ -506,6 +509,34 @@ renderSurprise();
 renderEvents('friday');
 renderEvents('saturday');
 renderDarts();
+
+function exportHTML() {
+  const src = document.documentElement.outerHTML;
+  // Inject current data as defaults so the exported file has everything baked in
+  const injected = src
+    .replace('const DEFAULT_SURPRISE = load(\'surprise\', DEFAULT_SURPRISE);', '')
+    .replace(
+      'let surprise = load(\'surprise\', DEFAULT_SURPRISE);',
+      `let surprise = ${JSON.stringify(surprise)};`
+    )
+    .replace(
+      'let friday   = load(\'friday\',   DEFAULT_FRIDAY);',
+      `let friday   = ${JSON.stringify(friday)};`
+    )
+    .replace(
+      'let saturday = load(\'saturday\', DEFAULT_SATURDAY);',
+      `let saturday = ${JSON.stringify(saturday)};`
+    )
+    .replace(
+      'let darts    = load(\'darts\',    DEFAULT_DART);',
+      `let darts    = ${JSON.stringify(darts)};`
+    );
+  const blob = new Blob([injected], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'index.html';
+  a.click();
+}
 </script>
 </body>
 </html>
