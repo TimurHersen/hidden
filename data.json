@@ -1,0 +1,43 @@
+{
+  "surprise": [
+    { "id": 1, "time": "Kvällen innan", "title": "Ta cykeln — lägg ut annonsen", "desc": "En i gruppen tar cykeln sent på kvällen. Lägg ut en fejkannons på Blocket från ett okänt konto, som om en tjuv säljer den vidare. Pris lite under marknadsvärde.", "special": "ad" },
+    { "id": 2, "time": "08:20", "title": "En i gruppen skickar länken", "desc": "Välj den i gruppen han minst skulle misstänka. Låtsas att det är en slump.", "special": "chat" }
+  ],
+  "friday": [
+    { "id": 1, "time": "08:00", "emoji": "🫵", "title": "Kidnappa Ludvig", "color": "hl" },
+    { "id": 2, "time": "09:00", "emoji": "🚗", "title": "Åka till Arlanda", "color": "tr" },
+    { "id": 3, "time": "12:25", "emoji": "✈️", "title": "Flyg → Köln", "color": "tr" },
+    { "id": 4, "time": "14:30", "emoji": "🛬", "title": "Framme i Köln", "color": "tr" },
+    { "id": 5, "time": "15:30", "emoji": "🍺", "title": "Altstadt & Kölsch", "color": "br", "dart": true, "dur": "15:30 – 20:00" },
+    { "id": 6, "time": "20:00", "emoji": "🥩", "title": "Peters Brauhaus", "color": "rd" }
+  ],
+  "saturday": [
+    { "id": 1, "time": "10:30", "emoji": "🥐", "title": "Frukost — Zadem", "color": "hl" },
+    { "id": 2, "time": "14:30", "emoji": "🪓", "title": "Yxkastning", "color": "rd", "dur": "14:30 – 16:15" },
+    { "id": 3, "time": "16:15", "emoji": "🏨", "title": "Tillbaka till hotellet", "color": "tr" },
+    { "id": 4, "time": "17:30", "emoji": "🧠", "title": "Quiz", "color": "pu" },
+    { "id": 5, "time": "20:30", "emoji": "🍽️", "title": "IKIGAI", "color": "pk" }
+  ],
+  "darts": [
+    { "id": 1,  "name": "Drick upp",           "desc": "Ta slut på ditt nuvarande glas." },
+    { "id": 2,  "name": "Roasta mig",           "desc": "Alla säger en pinsam sak om brudgummen. 20 sek var." },
+    { "id": 3,  "name": "Telefon-roulette",     "desc": "Gruppen väljer en kontakt. Han skickar ett röstmeddelande." },
+    { "id": 4,  "name": "Nästa runda på dig",   "desc": "Brudgummen bjuder nästa runda på alla." },
+    { "id": 5,  "name": "Sanningsbomb",         "desc": "Gruppen ställer en fråga. Måste svara ärligt inför alla." },
+    { "id": 6,  "name": "Kostym på",            "desc": "Han tar på sig ett nytt plagg tills nästa kast." },
+    { "id": 7,  "name": "Bästisens val",        "desc": "Bäste mannen bestämmer fritt. Inga överklaganden." },
+    { "id": 8,  "name": "Alla tar en shot",     "desc": "Hela gänget tar en shot. Inga undantag." },
+    { "id": 9,  "name": "Kissa-timer",          "desc": "Nästa gång han behöver på toaletten frågar han om lov högt." },
+    { "id": 10, "name": "Grupptag",             "desc": "Gruppen röstar fram en utmaning alla gör tillsammans." },
+    { "id": 11, "name": "Foto-uppdrag",         "desc": "Gruppen pekar ut en okänd. Han tar ett gemensamt foto." },
+    { "id": 12, "name": "Bygg en historia",     "desc": "Alla berättar en mening var om brudgummen, runt bordet." },
+    { "id": 13, "name": "Otur — drick dubbelt", "desc": "Han dricker dubbelt så mycket som alla andra just nu." },
+    { "id": 14, "name": "Serenaden",            "desc": "Han sjunger 30 sek av en låt gruppen väljer." },
+    { "id": 15, "name": "Tummen ner",           "desc": "Siste person att lägga tummen på bordet dricker." },
+    { "id": 16, "name": "Vild-kort",            "desc": "Gruppen röstar fram valfri utmaning. Majoriteten vinner." },
+    { "id": 17, "name": "Livets lågpunkt",      "desc": "Han berättar sin mest pinsamma historia från de senaste 5 åren." },
+    { "id": 18, "name": "Byt dryck",            "desc": "Han och personen till höger byter glas i 10 minuter." },
+    { "id": 19, "name": "Högtalaruppdrag",      "desc": "Ber en okänd person önska brudgummen lycka till inför bröllopet." },
+    { "id": 20, "name": "Frikort",              "desc": "Tur! Sparar ett frikort att använda mot valfri utmaning senare." }
+  ]
+}
