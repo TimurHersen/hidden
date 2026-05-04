@@ -44,7 +44,14 @@
   /* ── deletable wrapper ── */
   .deletable { position: relative; }
   .del-btn { position: absolute; top: 6px; right: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(226,75,74,0.15); border: 1px solid rgba(226,75,74,0.25); color: #f09595; font-size: 13px; line-height: 1; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10; font-family: monospace; }
-  .deletable:hover .del-btn { display: flex; }
+  .edit-btn { position: absolute; top: 6px; right: 28px; width: 22px; height: 22px; border-radius: 50%; background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--amber); font-size: 11px; line-height: 1; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10; font-family: monospace; }
+  .deletable:hover .del-btn, .deletable:hover .edit-btn { display: flex; }
+
+  /* ── edit modal ── */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 20px; width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 12px; }
+  .modal-title { font-size: 14px; font-family: 'Courier New', monospace; color: var(--text2); margin-bottom: 2px; }
 
   /* ── add button ── */
   .add-btn { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding: 9px 14px; background: none; border: 1px dashed var(--border2); border-radius: var(--radius-sm); color: var(--text3); font-size: 12px; font-family: 'Courier New', monospace; cursor: pointer; width: 100%; transition: border-color 0.15s, color 0.15s; }
@@ -315,9 +322,31 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="edit-modal" onclick="if(event.target===this)closeEdit()">
+  <div class="modal">
+    <div class="modal-title" id="edit-modal-title">Edit</div>
+    <div id="edit-modal-fields" style="display:flex;flex-direction:column;gap:10px;"></div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeEdit()">Cancel</button>
+      <button class="btn-save" onclick="saveEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const DART_COLORS = ['var(--green)','var(--coral)','var(--purple)','var(--amber)','var(--blue)'];
 const DB_URL = 'https://hidden-89717-default-rtdb.europe-west1.firebasedatabase.app/data.json';
+
+let _editCtx = null; // { list, id }
+
+function parseTime(t) {
+  if (!t || t === '—') return 9999;
+  const m = t.match(/(\d{1,2}):(\d{2})/);
+  return m ? parseInt(m[1]) * 60 + parseInt(m[2]) : 9999;
+}
+function sortByTime(arr) {
+  return [...arr].sort((a, b) => parseTime(a.time) - parseTime(b.time));
+}
 
 let surprise = [], friday = [], saturday = [], darts = [];
 
@@ -363,6 +392,7 @@ function renderSurprise() {
     const isLast = i === surprise.length - 1;
     return `<div class="step deletable">
       ${!isLast ? '<div class="vline"></div>' : ''}
+      <button class="edit-btn" onclick="openEdit('surprise',${s.id})">✎</button>
       <button class="del-btn" onclick="deleteItem('surprise',${s.id})">×</button>
       <div class="dot da" style="font-size:13px;font-family:'Courier New',monospace;color:var(--text3)">${i + 1}</div>
       <div class="step-body">
@@ -375,10 +405,11 @@ function renderSurprise() {
 }
 
 function renderEvents(day) {
-  const data = day === 'friday' ? friday : saturday;
+  const data = sortByTime(day === 'friday' ? friday : saturday);
   const el = document.getElementById(day + '-list');
   el.innerHTML = data.map(e => `
     <div class="ev ${e.color} deletable">
+      <button class="edit-btn" onclick="openEdit('${day}',${e.id})">✎</button>
       <button class="del-btn" onclick="deleteItem('${day}',${e.id})">×</button>
       <div class="tb">${e.time}</div>
       <div class="card ${e.color}">
@@ -393,6 +424,7 @@ function renderDarts() {
   const el = document.getElementById('dart-list');
   el.innerHTML = darts.map((d, i) => `
     <div class="dart-item deletable">
+      <button class="edit-btn" onclick="openEdit('darts',${d.id})">✎</button>
       <button class="del-btn" onclick="deleteItem('darts',${d.id})">×</button>
       <div class="dart-num" style="color:${DART_COLORS[i % DART_COLORS.length]}">${i + 1}</div>
       <div class="dart-name">${d.name}</div>
@@ -431,6 +463,8 @@ function addEvent(day) {
   if (!title) return;
   const arr = day === 'friday' ? friday : saturday;
   arr.push({ id: Date.now(), time: time || '—', emoji: emoji || '📌', title, color });
+  if (day === 'friday') friday = sortByTime(friday);
+  else saturday = sortByTime(saturday);
   renderEvents(day);
   saveToCloud();
   document.getElementById(prefix + '-time').value = '';
@@ -449,6 +483,75 @@ function addDartItem() {
   document.getElementById('df-name').value = '';
   document.getElementById('df-desc').value = '';
   toggleForm('dart-form');
+}
+
+function openEdit(list, id) {
+  _editCtx = { list, id };
+  const fields = document.getElementById('edit-modal-fields');
+  const titles = { surprise: 'Edit step', friday: 'Edit event', saturday: 'Edit event', darts: 'Edit challenge' };
+  document.getElementById('edit-modal-title').textContent = titles[list] || 'Edit';
+
+  let item;
+  if (list === 'surprise') item = surprise.find(x => x.id === id);
+  else if (list === 'friday') item = friday.find(x => x.id === id);
+  else if (list === 'saturday') item = saturday.find(x => x.id === id);
+  else if (list === 'darts') item = darts.find(x => x.id === id);
+
+  if (list === 'darts') {
+    fields.innerHTML = `
+      <div class="form-field"><label>Name</label><input id="ef-name" value="${item.name}"></div>
+      <div class="form-field"><label>Description</label><textarea id="ef-desc" rows="2">${item.desc}</textarea></div>`;
+  } else if (list === 'friday' || list === 'saturday') {
+    const colors = ['hl','tr','br','rd','pu','pk'];
+    const colorNames = { hl:'Gold', tr:'Blue', br:'Green', rd:'Coral', pu:'Purple', pk:'Pink' };
+    fields.innerHTML = `
+      <div class="form-row">
+        <div class="form-field" style="max-width:80px"><label>Time</label><input id="ef-time" value="${item.time}"></div>
+        <div class="form-field" style="max-width:60px"><label>Emoji</label><input id="ef-emoji" value="${item.emoji}"></div>
+        <div class="form-field"><label>Title</label><input id="ef-title" value="${item.title}"></div>
+      </div>
+      <div class="form-field"><label>Color</label>
+        <select id="ef-color">${colors.map(c => `<option value="${c}"${item.color===c?' selected':''}>${colorNames[c]}</option>`).join('')}</select>
+      </div>`;
+  } else {
+    fields.innerHTML = `
+      <div class="form-row">
+        <div class="form-field" style="max-width:100px"><label>Time</label><input id="ef-time" value="${item.time}"></div>
+        <div class="form-field"><label>Title</label><input id="ef-title" value="${item.title}"></div>
+      </div>
+      <div class="form-field"><label>Description</label><textarea id="ef-desc" rows="2">${item.desc}</textarea></div>`;
+  }
+
+  document.getElementById('edit-modal').classList.add('open');
+  fields.querySelector('input, textarea')?.focus();
+}
+
+function closeEdit() {
+  document.getElementById('edit-modal').classList.remove('open');
+  _editCtx = null;
+}
+
+function saveEdit() {
+  if (!_editCtx) return;
+  const { list, id } = _editCtx;
+  const get = i => document.getElementById(i)?.value.trim() ?? '';
+
+  function patch(arr) {
+    return arr.map(x => {
+      if (x.id !== id) return x;
+      if (list === 'darts') return { ...x, name: get('ef-name') || x.name, desc: get('ef-desc') };
+      if (list === 'friday' || list === 'saturday') return { ...x, time: get('ef-time') || x.time, emoji: get('ef-emoji') || x.emoji, title: get('ef-title') || x.title, color: get('ef-color') || x.color };
+      return { ...x, time: get('ef-time') || x.time, title: get('ef-title') || x.title, desc: get('ef-desc') };
+    });
+  }
+
+  if (list === 'surprise') { surprise = patch(surprise); renderSurprise(); }
+  else if (list === 'friday') { friday = patch(friday); renderEvents('friday'); }
+  else if (list === 'saturday') { saturday = patch(saturday); renderEvents('saturday'); }
+  else if (list === 'darts') { darts = patch(darts); renderDarts(); }
+
+  closeEdit();
+  saveToCloud();
 }
 
 function deleteItem(list, id) {
