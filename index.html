@@ -333,15 +333,28 @@ function showStatus(msg, ok = true) {
 
 async function saveToCloud() {
   showStatus('Saving…');
+  console.log('[JSONBin] PUT →', BIN_URL);
+  console.log('[JSONBin] Payload:', { surprise, friday, saturday, darts });
   try {
+    const t0 = performance.now();
     const res = await fetch(BIN_URL, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
       body: JSON.stringify({ surprise, friday, saturday, darts })
     });
-    if (!res.ok) throw new Error();
+    const ms = Math.round(performance.now() - t0);
+    const json = await res.json();
+    if (!res.ok) {
+      console.error(`[JSONBin] PUT failed — HTTP ${res.status} (${ms}ms)`, json);
+      throw new Error();
+    }
+    console.log(`[JSONBin] PUT success — HTTP ${res.status} (${ms}ms)`, json);
+    writeCache({ surprise, friday, saturday, darts });
     showStatus('Saved ✓');
-  } catch(e) { showStatus('Save failed ✗', false); }
+  } catch(e) {
+    console.error('[JSONBin] Save error:', e);
+    showStatus('Save failed ✗', false);
+  }
 }
 
 /* ── renderers ── */
@@ -521,23 +534,62 @@ const DEFAULT_DATA = {
   ]
 };
 
-fetch(BIN_URL + '/latest', { headers: { 'X-Master-Key': API_KEY } })
-  .then(r => r.json())
-  .then(res => {
-    const d = res.record || {};
-    surprise = d.surprise && d.surprise.length ? d.surprise : DEFAULT_DATA.surprise;
-    friday   = d.friday   && d.friday.length   ? d.friday   : DEFAULT_DATA.friday;
-    saturday = d.saturday && d.saturday.length ? d.saturday : DEFAULT_DATA.saturday;
-    darts    = d.darts    && d.darts.length    ? d.darts    : DEFAULT_DATA.darts;
-    renderSurprise();
-    renderEvents('friday');
-    renderEvents('saturday');
-    renderDarts();
-    if (!res.record || !res.record.surprise) saveToCloud();
+const CACHE_KEY = 'svensexa_cache';
+
+function loadCache() {
+  try { const v = localStorage.getItem(CACHE_KEY); return v ? JSON.parse(v) : null; } catch(e) { return null; }
+}
+function writeCache(data) {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch(e) {}
+}
+
+function applyData(d) {
+  surprise = d.surprise && d.surprise.length ? d.surprise : DEFAULT_DATA.surprise;
+  friday   = d.friday   && d.friday.length   ? d.friday   : DEFAULT_DATA.friday;
+  saturday = d.saturday && d.saturday.length ? d.saturday : DEFAULT_DATA.saturday;
+  darts    = d.darts    && d.darts.length    ? d.darts    : DEFAULT_DATA.darts;
+  renderSurprise();
+  renderEvents('friday');
+  renderEvents('saturday');
+  renderDarts();
+}
+
+const cached = loadCache();
+if (cached) {
+  console.log('[Cache] Instant render from localStorage');
+  applyData(cached);
+} else {
+  console.log('[Cache] No cache — waiting for JSONBin');
+}
+
+const _loadUrl = BIN_URL + '/latest';
+console.log('[JSONBin] GET →', _loadUrl);
+const _loadT0 = performance.now();
+fetch(_loadUrl, { headers: { 'X-Master-Key': API_KEY } })
+  .then(r => {
+    console.log(`[JSONBin] GET response — HTTP ${r.status} (${Math.round(performance.now() - _loadT0)}ms)`);
+    return r.json();
   })
-  .catch(() => {
-    ({ surprise, friday, saturday, darts } = DEFAULT_DATA);
-    renderSurprise(); renderEvents('friday'); renderEvents('saturday'); renderDarts();
+  .then(res => {
+    console.log('[JSONBin] GET data:', res);
+    const d = res.record || {};
+    const seeded = !res.record || !res.record.surprise;
+    if (seeded) {
+      console.log('[JSONBin] Bin empty — seeding with defaults');
+      applyData(DEFAULT_DATA);
+      writeCache(DEFAULT_DATA);
+      saveToCloud();
+    } else {
+      applyData(d);
+      writeCache(d);
+      console.log('[Cache] Updated localStorage cache');
+    }
+  })
+  .catch(err => {
+    console.error('[JSONBin] GET failed:', err);
+    if (!cached) {
+      applyData(DEFAULT_DATA);
+    }
     showStatus('Offline — changes won\'t save', false);
   });
 </script>
