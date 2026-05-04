@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Svensexa 🍺</title>
+<title>KBH 🗓️</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -163,7 +163,7 @@
 
 <div class="header">
   <div class="header-top">
-    <h1>Svensexa</h1><span style="font-size:22px">🍺</span>
+    <h1>KBH</h1>
     <span id="save-status" style="margin-left:auto;font-size:11px;font-family:'Courier New',monospace;color:var(--text3);opacity:0;transition:opacity 0.4s;"></span>
   </div>
   <p class="header-sub">Stockholm → Köln &nbsp;·&nbsp; 2026</p>
@@ -361,34 +361,14 @@ function renderSurprise() {
   const el = document.getElementById('surprise-list');
   el.innerHTML = surprise.map((s, i) => {
     const isLast = i === surprise.length - 1;
-    const dotClass = s.special === 'ad' ? 'da' : s.special === 'chat' ? 'db' : 'dc';
-    const icon = s.special === 'ad' ? '📷' : s.special === 'chat' ? '💬' : '📍';
-    let extra = '';
-    if (s.special === 'ad') extra = `
-      <div class="ad">
-        <div class="ad-img"><svg width="44" height="44" viewBox="0 0 44 44" fill="none"><circle cx="12" cy="34" r="7" stroke="#5a5855" stroke-width="1.5"/><circle cx="32" cy="34" r="7" stroke="#5a5855" stroke-width="1.5"/><path d="M12 34 L18 18 L28 18 L32 34" stroke="#5a5855" stroke-width="1.5" stroke-linejoin="round"/><path d="M18 18 L22 10 L30 14" stroke="#5a5855" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 34 L32 34" stroke="#5a5855" stroke-width="1" stroke-dasharray="2 2"/></svg></div>
-        <div class="ad-body"><div class="ad-title-text">Cykel, bra skick — snabbförsäljning</div><div class="ad-price">1 500 kr</div><div class="ad-meta">Stockholms stad &nbsp;·&nbsp; Idag</div><div class="ad-desc-text">Säljer snabbt, kan mötas idag. Kontant.</div></div>
-      </div>
-      <div class="tip">Använd ett foto från hans Instagram eller sociala medier — han ska känna igen cykeln direkt när han ser länken.</div>`;
-    if (s.special === 'chat') extra = `
-      <div class="chat">
-        <div class="chat-label">En kompis i gruppen</div>
-        <div class="bubble them">Hej är inte det här din cykel?? Råkade scrolla på Blocket</div>
-        <div class="link-bubble"><div class="link-site">blocket.se</div><div class="link-title-text">Cykel, bra skick — snabbförsäljning</div><div class="link-sub">1 500 kr &nbsp;·&nbsp; Stockholms stad</div></div>
-        <div class="chat-label right">Han</div>
-        <div class="bubble stress">VA?? Det är ju min cykel wtf</div>
-        <div class="bubble stress">Vänta jag kollar</div>
-      </div>
-      <div class="tip">Den som skickar länken bör inte svara mer efter det — lämna honom i panik och låt nästa steg ta vid.</div>`;
     return `<div class="step deletable">
       ${!isLast ? '<div class="vline"></div>' : ''}
       <button class="del-btn" onclick="deleteItem('surprise',${s.id})">×</button>
-      <div class="dot ${dotClass}">${icon}</div>
+      <div class="dot da" style="font-size:13px;font-family:'Courier New',monospace;color:var(--text3)">${i + 1}</div>
       <div class="step-body">
         <div class="step-time">${s.time}</div>
         <div class="step-title">${s.title}</div>
         <div class="step-desc">${s.desc}</div>
-        ${extra}
       </div>
     </div>`;
   }).join('');
@@ -490,8 +470,11 @@ function switchTab(id) {
 
 const DEFAULT_DATA = {
   surprise: [
-    { id: 1, time: 'Kvällen innan', title: 'Ta cykeln — lägg ut annonsen', desc: 'En i gruppen tar cykeln sent på kvällen. Lägg ut en fejkannons på Blocket från ett okänt konto, som om en tjuv säljer den vidare. Pris lite under marknadsvärde.', special: 'ad' },
-    { id: 2, time: '08:20', title: 'En i gruppen skickar länken', desc: 'Välj den i gruppen han minst skulle misstänka. Låtsas att det är en slump.', special: 'chat' }
+    { id: 1, time: 'Kvällen innan', title: 'Ta cykeln', desc: 'En i gruppen tar cykeln sent på kvällen och ställer den på en annan plats.' },
+    { id: 2, time: 'Kvällen innan', title: 'Lägg ut fejkannonsen på Blocket', desc: 'Skapa ett okänt konto och lägg ut hans cykel till underpris. Använd ett foto från hans Instagram.' },
+    { id: 3, time: '08:20', title: 'Skicka Blocket-länken till honom', desc: 'Den i gruppen han minst misstänker skickar länken — låtsas att det är en slump.' },
+    { id: 4, time: '08:25', title: 'Han går ner — cykeln är borta', desc: 'Han hittar en lapp där cykeln stod med adressen dit ni ska mötas.' },
+    { id: 5, time: '08:30', title: 'Han svänger runt hörnet', desc: 'Hela gänget väntar. Cykeln är framme. Öl i handen.' }
   ],
   friday: [
     { id:1, time:'08:00', emoji:'🫵', title:'Kidnappa Ludvig', color:'hl' },
@@ -532,7 +515,7 @@ const DEFAULT_DATA = {
   ]
 };
 
-const CACHE_KEY = 'svensexa_cache';
+const CACHE_KEY = 'kbh_cache';
 
 function loadCache() {
   try { const v = localStorage.getItem(CACHE_KEY); return v ? JSON.parse(v) : null; } catch(e) { return null; }
