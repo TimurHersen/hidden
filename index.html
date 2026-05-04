@@ -164,7 +164,7 @@
 <div class="header">
   <div class="header-top">
     <h1>Svensexa</h1><span style="font-size:22px">🍺</span>
-    <button onclick="exportHTML()" style="margin-left:auto;background:none;border:1px solid rgba(239,159,39,0.3);color:#EF9F27;font-size:11px;font-family:'Courier New',monospace;padding:5px 12px;border-radius:6px;cursor:pointer;letter-spacing:0.04em;" title="Ladda ner data.json för GitHub">↓ Exportera data</button>
+    <span id="save-status" style="margin-left:auto;font-size:11px;font-family:'Courier New',monospace;color:var(--text3);opacity:0;transition:opacity 0.4s;"></span>
   </div>
   <p class="header-sub">Stockholm → Köln &nbsp;·&nbsp; 2026</p>
 </div>
@@ -317,8 +317,32 @@
 
 <script>
 const DART_COLORS = ['var(--green)','var(--coral)','var(--purple)','var(--amber)','var(--blue)'];
+const BIN_ID  = '69f7a1c2aaba88219768d618';
+const API_KEY = '$2a$10$Nmrcru.dfUORMbmCIJHb/efv5a3hQnsmSBqx/TcjkakjuPhcFEd6O';
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
 let surprise = [], friday = [], saturday = [], darts = [];
+
+function showStatus(msg, ok = true) {
+  const el = document.getElementById('save-status');
+  el.textContent = msg;
+  el.style.color = ok ? '#1D9E75' : '#D85A30';
+  el.style.opacity = '1';
+  setTimeout(() => { el.style.opacity = '0'; }, 2500);
+}
+
+async function saveToCloud() {
+  showStatus('Saving…');
+  try {
+    const res = await fetch(BIN_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
+      body: JSON.stringify({ surprise, friday, saturday, darts })
+    });
+    if (!res.ok) throw new Error();
+    showStatus('Saved ✓');
+  } catch(e) { showStatus('Save failed ✗', false); }
+}
 
 /* ── renderers ── */
 
@@ -400,6 +424,7 @@ function addSurpriseStep() {
   const id = Date.now();
   surprise.push({ id, time: time || '—', title, desc });
   renderSurprise();
+  saveToCloud();
   document.getElementById('sf-time').value = '';
   document.getElementById('sf-title').value = '';
   document.getElementById('sf-desc').value = '';
@@ -416,6 +441,7 @@ function addEvent(day) {
   const arr = day === 'friday' ? friday : saturday;
   arr.push({ id: Date.now(), time: time || '—', emoji: emoji || '📌', title, color });
   renderEvents(day);
+  saveToCloud();
   document.getElementById(prefix + '-time').value = '';
   document.getElementById(prefix + '-emoji').value = '';
   document.getElementById(prefix + '-title').value = '';
@@ -428,6 +454,7 @@ function addDartItem() {
   if (!name) return;
   darts.push({ id: Date.now(), name, desc });
   renderDarts();
+  saveToCloud();
   document.getElementById('df-name').value = '';
   document.getElementById('df-desc').value = '';
   toggleForm('dart-form');
@@ -438,6 +465,7 @@ function deleteItem(list, id) {
   else if (list === 'friday') { friday = friday.filter(x => x.id !== id); renderEvents('friday'); }
   else if (list === 'saturday') { saturday = saturday.filter(x => x.id !== id); renderEvents('saturday'); }
   else if (list === 'darts') { darts = darts.filter(x => x.id !== id); renderDarts(); }
+  saveToCloud();
 }
 
 function switchTab(id) {
@@ -449,36 +477,69 @@ function switchTab(id) {
   });
 }
 
-renderSurprise();
-renderEvents('friday');
-renderEvents('saturday');
-renderDarts();
+const DEFAULT_DATA = {
+  surprise: [
+    { id: 1, time: 'Kvällen innan', title: 'Ta cykeln — lägg ut annonsen', desc: 'En i gruppen tar cykeln sent på kvällen. Lägg ut en fejkannons på Blocket från ett okänt konto, som om en tjuv säljer den vidare. Pris lite under marknadsvärde.', special: 'ad' },
+    { id: 2, time: '08:20', title: 'En i gruppen skickar länken', desc: 'Välj den i gruppen han minst skulle misstänka. Låtsas att det är en slump.', special: 'chat' }
+  ],
+  friday: [
+    { id:1, time:'08:00', emoji:'🫵', title:'Kidnappa Ludvig', color:'hl' },
+    { id:2, time:'09:00', emoji:'🚗', title:'Åka till Arlanda', color:'tr' },
+    { id:3, time:'12:25', emoji:'✈️', title:'Flyg → Köln', color:'tr' },
+    { id:4, time:'14:30', emoji:'🛬', title:'Framme i Köln', color:'tr' },
+    { id:5, time:'15:30', emoji:'🍺', title:'Altstadt & Kölsch', color:'br', dart:true, dur:'15:30 – 20:00' },
+    { id:6, time:'20:00', emoji:'🥩', title:'Peters Brauhaus', color:'rd' }
+  ],
+  saturday: [
+    { id:1, time:'10:30', emoji:'🥐', title:'Frukost — Zadem', color:'hl' },
+    { id:2, time:'14:30', emoji:'🪓', title:'Yxkastning', color:'rd', dur:'14:30 – 16:15' },
+    { id:3, time:'16:15', emoji:'🏨', title:'Tillbaka till hotellet', color:'tr' },
+    { id:4, time:'17:30', emoji:'🧠', title:'Quiz', color:'pu' },
+    { id:5, time:'20:30', emoji:'🍽️', title:'IKIGAI', color:'pk' }
+  ],
+  darts: [
+    { id:1,  name:'Drick upp',           desc:'Ta slut på ditt nuvarande glas.' },
+    { id:2,  name:'Roasta mig',          desc:'Alla säger en pinsam sak om brudgummen. 20 sek var.' },
+    { id:3,  name:'Telefon-roulette',    desc:'Gruppen väljer en kontakt. Han skickar ett röstmeddelande.' },
+    { id:4,  name:'Nästa runda på dig',  desc:'Brudgummen bjuder nästa runda på alla.' },
+    { id:5,  name:'Sanningsbomb',        desc:'Gruppen ställer en fråga. Måste svara ärligt inför alla.' },
+    { id:6,  name:'Kostym på',           desc:'Han tar på sig ett nytt plagg tills nästa kast.' },
+    { id:7,  name:'Bästisens val',       desc:'Bäste mannen bestämmer fritt. Inga överklaganden.' },
+    { id:8,  name:'Alla tar en shot',    desc:'Hela gänget tar en shot. Inga undantag.' },
+    { id:9,  name:'Kissa-timer',         desc:'Nästa gång han behöver på toaletten frågar han om lov högt.' },
+    { id:10, name:'Grupptag',            desc:'Gruppen röstar fram en utmaning alla gör tillsammans.' },
+    { id:11, name:'Foto-uppdrag',        desc:'Gruppen pekar ut en okänd. Han tar ett gemensamt foto.' },
+    { id:12, name:'Bygg en historia',    desc:'Alla berättar en mening var om brudgummen, runt bordet.' },
+    { id:13, name:'Otur — drick dubbelt',desc:'Han dricker dubbelt så mycket som alla andra just nu.' },
+    { id:14, name:'Serenaden',           desc:'Han sjunger 30 sek av en låt gruppen väljer.' },
+    { id:15, name:'Tummen ner',          desc:'Siste person att lägga tummen på bordet dricker.' },
+    { id:16, name:'Vild-kort',           desc:'Gruppen röstar fram valfri utmaning. Majoriteten vinner.' },
+    { id:17, name:'Livets lågpunkt',     desc:'Han berättar sin mest pinsamma historia från de senaste 5 åren.' },
+    { id:18, name:'Byt dryck',           desc:'Han och personen till höger byter glas i 10 minuter.' },
+    { id:19, name:'Högtalaruppdrag',     desc:'Ber en okänd person önska brudgummen lycka till inför bröllopet.' },
+    { id:20, name:'Frikort',             desc:'Tur! Sparar ett frikort att använda mot valfri utmaning senare.' }
+  ]
+};
 
-fetch('data.json?v=' + Date.now())
+fetch(BIN_URL + '/latest', { headers: { 'X-Master-Key': API_KEY } })
   .then(r => r.json())
-  .then(d => {
-    surprise = d.surprise || [];
-    friday   = d.friday   || [];
-    saturday = d.saturday || [];
-    darts    = d.darts    || [];
+  .then(res => {
+    const d = res.record || {};
+    surprise = d.surprise && d.surprise.length ? d.surprise : DEFAULT_DATA.surprise;
+    friday   = d.friday   && d.friday.length   ? d.friday   : DEFAULT_DATA.friday;
+    saturday = d.saturday && d.saturday.length ? d.saturday : DEFAULT_DATA.saturday;
+    darts    = d.darts    && d.darts.length    ? d.darts    : DEFAULT_DATA.darts;
     renderSurprise();
     renderEvents('friday');
     renderEvents('saturday');
     renderDarts();
+    if (!res.record || !res.record.surprise) saveToCloud();
   })
-  .catch(() => { /* runs fine without data.json in local preview */ });
-
-function exportHTML() {
-  fetch('data.json?v=' + Date.now())
-    .then(r => r.text())
-    .then(json => {
-      const blob = new Blob([json], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'data.json';
-      a.click();
-    });
-}
+  .catch(() => {
+    ({ surprise, friday, saturday, darts } = DEFAULT_DATA);
+    renderSurprise(); renderEvents('friday'); renderEvents('saturday'); renderDarts();
+    showStatus('Offline — changes won\'t save', false);
+  });
 </script>
 </body>
 </html>
