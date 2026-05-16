@@ -164,6 +164,30 @@
   .tbd { margin-top: 32px; padding: 16px; background: var(--bg3); border: 1px dashed var(--border2); border-radius: var(--radius); text-align: center; }
   .tbd p { font-size: 12px; font-family: 'Courier New', monospace; color: var(--text3); }
   .tbd p + p { margin-top: 4px; font-size: 11px; }
+
+  /* ── Tips/Önskemål ── */
+  .tips-cats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+  .tips-cat-btn { background: none; border: 1px solid var(--border2); border-radius: 20px; color: var(--text3); font-size: 11px; font-family: 'Courier New', monospace; padding: 4px 12px; cursor: pointer; transition: all 0.15s; }
+  .tips-cat-btn:hover { color: var(--text2); border-color: rgba(255,255,255,0.22); }
+  .tips-cat-btn.active { color: var(--amber); border-color: var(--amber-border); background: var(--amber-dim); }
+  .tips-list { display: flex; flex-direction: column; gap: 8px; }
+  .tip-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; display: flex; gap: 12px; align-items: flex-start; }
+  .tip-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .tip-body { flex: 1; min-width: 0; }
+  .tip-name { font-size: 14px; color: var(--text); margin-bottom: 3px; }
+  .tip-meta { font-size: 11px; font-family: 'Courier New', monospace; color: var(--text3); margin-bottom: 5px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .tip-note { font-size: 12px; font-family: 'Courier New', monospace; color: var(--text2); line-height: 1.5; }
+  .cat-badge { display: inline-block; font-size: 10px; font-family: 'Courier New', monospace; padding: 2px 8px; border-radius: 20px; }
+  .cat-bar   { background: rgba(55,138,221,0.12);   color: #7dbfef; border: 1px solid rgba(55,138,221,0.2); }
+  .cat-mat   { background: rgba(29,158,117,0.12);   color: #5dcaa5; border: 1px solid rgba(29,158,117,0.2); }
+  .cat-sev   { background: rgba(212,83,126,0.12);   color: #ed93b1; border: 1px solid rgba(212,83,126,0.2); }
+  .cat-akt   { background: rgba(239,159,39,0.12);   color: #f5c060; border: 1px solid rgba(239,159,39,0.3); }
+  .cat-kul   { background: rgba(127,119,221,0.12);  color: #afa9ec; border: 1px solid rgba(127,119,221,0.2); }
+  .tip-voted { display: flex; align-items: center; gap: 4px; margin-left: auto; flex-shrink: 0; }
+  .vote-btn { background: none; border: none; cursor: pointer; font-size: 14px; opacity: 0.35; transition: opacity 0.15s, transform 0.1s; padding: 2px 4px; }
+  .vote-btn:hover { opacity: 0.7; transform: scale(1.15); }
+  .vote-btn.voted { opacity: 1; }
+  .vote-count { font-size: 12px; font-family: 'Courier New', monospace; color: var(--text3); min-width: 14px; text-align: center; }
 </style>
 </head>
 <body>
@@ -178,9 +202,9 @@
 
 <div class="tabs">
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('surprise')">Överraskningen</button>
     <button class="tab-btn" onclick="switchTab('programme')">Programmet</button>
     <button class="tab-btn" onclick="switchTab('dart')">Pilspelet</button>
+    <button class="tab-btn" onclick="switchTab('tips')">Tips/Önskemål</button>
   </div>
 </div>
 
@@ -320,6 +344,57 @@
       <div class="bull-card inner"><div class="bull-title">Bullseye — 50p</div><div class="bull-pts">Innersta punkten</div><div class="bull-desc">Ringer partnern på högtalaren och läser upp en kärleksdikt gruppen skriver live — ett ord var.</div></div>
     </div>
   </div>
+
+  <!-- ── Tips/Önskemål ── -->
+  <div class="panel" id="tab-tips">
+    <p class="sec-label">Platser, barer &amp; saker att se</p>
+    <div class="tips-cats">
+      <button class="tips-cat-btn active" onclick="filterTips('alla')">Alla</button>
+      <button class="tips-cat-btn" onclick="filterTips('bar')">🍺 Bar</button>
+      <button class="tips-cat-btn" onclick="filterTips('mat')">🍽️ Mat</button>
+      <button class="tips-cat-btn" onclick="filterTips('sev')">🏛️ Sevärdhet</button>
+      <button class="tips-cat-btn" onclick="filterTips('akt')">🎯 Aktivitet</button>
+      <button class="tips-cat-btn" onclick="filterTips('kul')">✨ Kul</button>
+    </div>
+    <div class="tips-list" id="tips-list"></div>
+    <button class="add-btn" onclick="toggleForm('tips-form')" style="margin-top:16px"><span class="add-btn-icon">+</span> Lägg till tips</button>
+    <div class="add-form" id="tips-form">
+      <div class="form-row">
+        <div class="form-field" style="max-width:70px">
+          <label>Emoji</label>
+          <input id="tf-emoji" type="text" placeholder="🍺">
+        </div>
+        <div class="form-field">
+          <label>Namn / Plats</label>
+          <input id="tf-name" type="text" placeholder="t.ex. Brauhaus Pütz">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Kategori</label>
+          <select id="tf-cat">
+            <option value="bar">🍺 Bar</option>
+            <option value="mat">🍽️ Mat</option>
+            <option value="sev">🏛️ Sevärdhet</option>
+            <option value="akt">🎯 Aktivitet</option>
+            <option value="kul">✨ Kul</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Område / Info</label>
+          <input id="tf-area" type="text" placeholder="t.ex. Altstadt">
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Anteckning</label>
+        <textarea id="tf-note" rows="2" placeholder="Varför är det värt ett besök?"></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="toggleForm('tips-form')">Avbryt</button>
+        <button class="btn-save" onclick="addTip()">Spara</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="modal-overlay" id="edit-modal" onclick="if(event.target===this)closeEdit()">
@@ -337,7 +412,11 @@
 const DART_COLORS = ['var(--green)','var(--coral)','var(--purple)','var(--amber)','var(--blue)'];
 const DB_URL = 'https://hidden-89717-default-rtdb.europe-west1.firebasedatabase.app/data.json';
 
-let _editCtx = null; // { list, id }
+const CAT_LABELS = { bar:'Bar', mat:'Mat', sev:'Sevärdhet', akt:'Aktivitet', kul:'Kul' };
+const CAT_CSS    = { bar:'cat-bar', mat:'cat-mat', sev:'cat-sev', akt:'cat-akt', kul:'cat-kul' };
+let _tipsFilter = 'alla';
+
+let _editCtx = null;
 
 function parseTime(t) {
   if (!t || t === '—') return 9999;
@@ -348,7 +427,7 @@ function sortByTime(arr) {
   return [...arr].sort((a, b) => parseTime(a.time) - parseTime(b.time));
 }
 
-let surprise = [], friday = [], saturday = [], darts = [];
+let surprise = [], friday = [], saturday = [], darts = [], tips = [];
 
 function showStatus(msg, ok = true) {
   const el = document.getElementById('save-status');
@@ -360,26 +439,19 @@ function showStatus(msg, ok = true) {
 
 async function saveToCloud() {
   showStatus('Saving…');
-  console.log('[Firebase] PUT →', DB_URL);
-  console.log('[Firebase] Payload:', { surprise, friday, saturday, darts });
   try {
     const t0 = performance.now();
     const res = await fetch(DB_URL, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ surprise, friday, saturday, darts })
+      body: JSON.stringify({ surprise, friday, saturday, darts, tips })
     });
     const ms = Math.round(performance.now() - t0);
     const json = await res.json();
-    if (!res.ok) {
-      console.error(`[Firebase] PUT failed — HTTP ${res.status} (${ms}ms)`, json);
-      throw new Error();
-    }
-    console.log(`[Firebase] PUT success — HTTP ${res.status} (${ms}ms)`, json);
-    writeCache({ surprise, friday, saturday, darts });
+    if (!res.ok) throw new Error();
+    writeCache({ surprise, friday, saturday, darts, tips });
     showStatus('Saved ✓');
   } catch(e) {
-    console.error('[Firebase] Save error:', e);
     showStatus('Save failed ✗', false);
   }
 }
@@ -414,7 +486,7 @@ function renderEvents(day) {
       <div class="tb">${e.time}</div>
       <div class="card ${e.color}">
         <p class="ct"><span class="ci">${e.emoji}</span>${e.title}</p>
-        ${e.dart ? `<div class="dart-note">🎯 Darttavla — Ludvig kastar, pilen bestämmer aktivitet & utmaning</div>` : ''}
+        ${e.dart ? `<div class="dart-note">🎯 Darttavla — Ludvig kastar, pilen bestämmer aktivitet &amp; utmaning</div>` : ''}
         ${e.dur ? `<div class="dur"><div class="dur-bar" style="width:80px;background:currentColor"></div><span class="dur-lbl" style="color:var(--text3)">${e.dur}</span></div>` : ''}
       </div>
     </div>`).join('');
@@ -430,6 +502,47 @@ function renderDarts() {
       <div class="dart-name">${d.name}</div>
       <div class="dart-desc">${d.desc}</div>
     </div>`).join('');
+}
+
+function renderTips() {
+  const el = document.getElementById('tips-list');
+  const filtered = _tipsFilter === 'alla' ? tips : tips.filter(t => t.cat === _tipsFilter);
+  if (!filtered.length) {
+    el.innerHTML = `<div style="padding:24px 0;text-align:center;font-size:12px;font-family:'Courier New',monospace;color:var(--text3)">Inga tips ännu — lägg till ett!</div>`;
+    return;
+  }
+  el.innerHTML = filtered.map(t => `
+    <div class="tip-card deletable">
+      <button class="edit-btn" onclick="openEdit('tips',${t.id})">✎</button>
+      <button class="del-btn" onclick="deleteItem('tips',${t.id})">×</button>
+      <div class="tip-icon">${t.emoji || '📍'}</div>
+      <div class="tip-body">
+        <div class="tip-name">${t.name}</div>
+        <div class="tip-meta">
+          <span class="cat-badge ${CAT_CSS[t.cat] || 'cat-kul'}">${CAT_LABELS[t.cat] || t.cat}</span>
+          ${t.area ? `<span>${t.area}</span>` : ''}
+        </div>
+        ${t.note ? `<div class="tip-note">${t.note}</div>` : ''}
+      </div>
+      <div class="tip-voted">
+        <button class="vote-btn${(t.votes||0) > 0 ? ' voted' : ''}" onclick="voteTip(${t.id})">👍</button>
+        <span class="vote-count">${t.votes || 0}</span>
+      </div>
+    </div>`).join('');
+}
+
+function filterTips(cat) {
+  _tipsFilter = cat;
+  document.querySelectorAll('.tips-cat-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim().includes(cat === 'alla' ? 'Alla' : CAT_LABELS[cat] || cat));
+  });
+  renderTips();
+}
+
+function voteTip(id) {
+  tips = tips.map(t => t.id === id ? { ...t, votes: (t.votes || 0) + 1 } : t);
+  renderTips();
+  saveToCloud();
 }
 
 /* ── add/delete ── */
@@ -485,10 +598,27 @@ function addDartItem() {
   toggleForm('dart-form');
 }
 
+function addTip() {
+  const emoji = document.getElementById('tf-emoji').value.trim();
+  const name  = document.getElementById('tf-name').value.trim();
+  const cat   = document.getElementById('tf-cat').value;
+  const area  = document.getElementById('tf-area').value.trim();
+  const note  = document.getElementById('tf-note').value.trim();
+  if (!name) return;
+  tips.push({ id: Date.now(), emoji: emoji || '📍', name, cat, area, note, votes: 0 });
+  renderTips();
+  saveToCloud();
+  document.getElementById('tf-emoji').value = '';
+  document.getElementById('tf-name').value = '';
+  document.getElementById('tf-area').value = '';
+  document.getElementById('tf-note').value = '';
+  toggleForm('tips-form');
+}
+
 function openEdit(list, id) {
   _editCtx = { list, id };
   const fields = document.getElementById('edit-modal-fields');
-  const titles = { surprise: 'Edit step', friday: 'Edit event', saturday: 'Edit event', darts: 'Edit challenge' };
+  const titles = { surprise: 'Edit step', friday: 'Edit event', saturday: 'Edit event', darts: 'Edit challenge', tips: 'Edit tip' };
   document.getElementById('edit-modal-title').textContent = titles[list] || 'Edit';
 
   let item;
@@ -496,6 +626,7 @@ function openEdit(list, id) {
   else if (list === 'friday') item = friday.find(x => x.id === id);
   else if (list === 'saturday') item = saturday.find(x => x.id === id);
   else if (list === 'darts') item = darts.find(x => x.id === id);
+  else if (list === 'tips') item = tips.find(x => x.id === id);
 
   if (list === 'darts') {
     fields.innerHTML = `
@@ -513,6 +644,20 @@ function openEdit(list, id) {
       <div class="form-field"><label>Color</label>
         <select id="ef-color">${colors.map(c => `<option value="${c}"${item.color===c?' selected':''}>${colorNames[c]}</option>`).join('')}</select>
       </div>`;
+  } else if (list === 'tips') {
+    const cats = ['bar','mat','sev','akt','kul'];
+    fields.innerHTML = `
+      <div class="form-row">
+        <div class="form-field" style="max-width:70px"><label>Emoji</label><input id="ef-emoji" value="${item.emoji||''}"></div>
+        <div class="form-field"><label>Namn</label><input id="ef-title" value="${item.name}"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>Kategori</label>
+          <select id="ef-cat">${cats.map(c => `<option value="${c}"${item.cat===c?' selected':''}>${CAT_LABELS[c]}</option>`).join('')}</select>
+        </div>
+        <div class="form-field"><label>Område</label><input id="ef-area" value="${item.area||''}"></div>
+      </div>
+      <div class="form-field"><label>Anteckning</label><textarea id="ef-desc" rows="2">${item.note||''}</textarea></div>`;
   } else {
     fields.innerHTML = `
       <div class="form-row">
@@ -541,6 +686,7 @@ function saveEdit() {
       if (x.id !== id) return x;
       if (list === 'darts') return { ...x, name: get('ef-name') || x.name, desc: get('ef-desc') };
       if (list === 'friday' || list === 'saturday') return { ...x, time: get('ef-time') || x.time, emoji: get('ef-emoji') || x.emoji, title: get('ef-title') || x.title, color: get('ef-color') || x.color };
+      if (list === 'tips') return { ...x, emoji: get('ef-emoji') || x.emoji, name: get('ef-title') || x.name, cat: get('ef-cat') || x.cat, area: get('ef-area'), note: get('ef-desc') };
       return { ...x, time: get('ef-time') || x.time, title: get('ef-title') || x.title, desc: get('ef-desc') };
     });
   }
@@ -549,6 +695,7 @@ function saveEdit() {
   else if (list === 'friday') { friday = patch(friday); renderEvents('friday'); }
   else if (list === 'saturday') { saturday = patch(saturday); renderEvents('saturday'); }
   else if (list === 'darts') { darts = patch(darts); renderDarts(); }
+  else if (list === 'tips') { tips = patch(tips); renderTips(); }
 
   closeEdit();
   saveToCloud();
@@ -559,12 +706,14 @@ function deleteItem(list, id) {
   else if (list === 'friday') { friday = friday.filter(x => x.id !== id); renderEvents('friday'); }
   else if (list === 'saturday') { saturday = saturday.filter(x => x.id !== id); renderEvents('saturday'); }
   else if (list === 'darts') { darts = darts.filter(x => x.id !== id); renderDarts(); }
+  else if (list === 'tips') { tips = tips.filter(x => x.id !== id); renderTips(); }
   saveToCloud();
 }
 
 function switchTab(id) {
+  const tabIds = ['surprise','programme','dart','tips'];
   document.querySelectorAll('.tab-btn').forEach((b, i) => {
-    b.classList.toggle('active', ['surprise','programme','dart'][i] === id);
+    b.classList.toggle('active', tabIds[i] === id);
   });
   document.querySelectorAll('.panel').forEach(p => {
     p.classList.toggle('active', p.id === 'tab-' + id);
@@ -615,7 +764,8 @@ const DEFAULT_DATA = {
     { id:18, name:'Byt dryck',           desc:'Han och personen till höger byter glas i 10 minuter.' },
     { id:19, name:'Högtalaruppdrag',     desc:'Ber en okänd person önska brudgummen lycka till inför bröllopet.' },
     { id:20, name:'Frikort',             desc:'Tur! Sparar ett frikort att använda mot valfri utmaning senare.' }
-  ]
+  ],
+  tips: []
 };
 
 const CACHE_KEY = 'kbh_cache';
@@ -632,44 +782,33 @@ function applyData(d) {
   friday   = d.friday   && d.friday.length   ? d.friday   : DEFAULT_DATA.friday;
   saturday = d.saturday && d.saturday.length ? d.saturday : DEFAULT_DATA.saturday;
   darts    = d.darts    && d.darts.length    ? d.darts    : DEFAULT_DATA.darts;
+  tips     = d.tips     ? d.tips             : DEFAULT_DATA.tips;
   renderSurprise();
   renderEvents('friday');
   renderEvents('saturday');
   renderDarts();
+  renderTips();
 }
 
 const cached = loadCache();
 if (cached) {
-  console.log('[Cache] Instant render from localStorage');
   applyData(cached);
-} else {
-  console.log('[Cache] No cache — waiting for JSONBin');
 }
 
-const _loadUrl = DB_URL;
-console.log('[Firebase] GET →', _loadUrl);
-const _loadT0 = performance.now();
-fetch(_loadUrl)
-  .then(r => {
-    console.log(`[Firebase] GET response — HTTP ${r.status} (${Math.round(performance.now() - _loadT0)}ms)`);
-    return r.json();
-  })
+fetch(DB_URL)
+  .then(r => r.json())
   .then(d => {
-    console.log('[Firebase] GET data:', d);
     const seeded = !d || !d.surprise;
     if (seeded) {
-      console.log('[Firebase] DB empty — seeding with defaults');
       applyData(DEFAULT_DATA);
       writeCache(DEFAULT_DATA);
       saveToCloud();
     } else {
       applyData(d);
       writeCache(d);
-      console.log('[Cache] Updated localStorage cache');
     }
   })
   .catch(err => {
-    console.error('[Firebase] GET failed:', err);
     if (!cached) applyData(DEFAULT_DATA);
     showStatus('Offline — changes won\'t save', false);
   });
