@@ -3,89 +3,72 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KBH 🗓️</title>
+<title>Svensexa 🍺</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   :root {
-    --bg: #0e0e0e; --bg2: #161616; --bg3: #1e1e1e;
-    --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
-    --text: #f0ede8; --text2: #9e9b96; --text3: #5a5855;
-    --amber: #EF9F27; --amber-dim: rgba(239,159,39,0.12); --amber-border: rgba(239,159,39,0.3);
-    --green: #1D9E75; --green-dim: rgba(29,158,117,0.12);
-    --purple: #7F77DD; --purple-dim: rgba(127,119,221,0.12);
-    --coral: #D85A30; --coral-dim: rgba(216,90,48,0.12);
-    --blue: #378ADD; --blue-dim: rgba(55,138,221,0.12);
-    --pink: #D4537E; --pink-dim: rgba(212,83,126,0.12);
-    --radius: 12px; --radius-sm: 8px;
+    --bg: #0e0e0e;
+    --bg2: #161616;
+    --bg3: #1e1e1e;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0ede8;
+    --text2: #9e9b96;
+    --text3: #5a5855;
+    --amber: #EF9F27;
+    --amber-dim: rgba(239,159,39,0.12);
+    --amber-border: rgba(239,159,39,0.3);
+    --green: #1D9E75;
+    --green-dim: rgba(29,158,117,0.12);
+    --purple: #7F77DD;
+    --purple-dim: rgba(127,119,221,0.12);
+    --coral: #D85A30;
+    --coral-dim: rgba(216,90,48,0.12);
+    --blue: #378ADD;
+    --blue-dim: rgba(55,138,221,0.12);
+    --pink: #D4537E;
+    --pink-dim: rgba(212,83,126,0.12);
+    --red-dim: #1e0e0e;
+    --radius: 12px;
+    --radius-sm: 8px;
   }
+
   html, body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: 'Georgia', 'Times New Roman', serif; }
 
+  /* ── Header ── */
   .header { padding: 32px 20px 0; max-width: 600px; margin: 0 auto; }
   .header-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
   .header h1 { font-size: 28px; font-weight: normal; letter-spacing: -0.5px; color: var(--text); }
   .header-sub { font-size: 13px; color: var(--text3); font-family: 'Courier New', monospace; }
 
+  /* ── Tabs ── */
   .tabs { max-width: 600px; margin: 0 auto; padding: 24px 20px 0; }
-  .tab-bar { display: flex; gap: 2px; border-bottom: 1px solid var(--border); }
+  .tab-bar { display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin-bottom: 0; }
   .tab-btn { background: none; border: none; color: var(--text3); font-size: 13px; font-family: 'Courier New', monospace; letter-spacing: 0.04em; padding: 10px 16px 12px; cursor: pointer; position: relative; transition: color 0.2s; white-space: nowrap; }
   .tab-btn:hover { color: var(--text2); }
   .tab-btn.active { color: var(--amber); }
   .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--amber); border-radius: 2px 2px 0 0; }
 
+  /* ── Panels ── */
   .panels { max-width: 600px; margin: 0 auto; padding: 0 20px 60px; }
   .panel { display: none; padding-top: 28px; }
   .panel.active { display: block; animation: fadein 0.2s ease; }
   @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
+  /* ── Shared components ── */
   .sec-label { font-size: 10px; font-family: 'Courier New', monospace; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 14px; }
   .divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
   .tip { background: rgba(175,169,236,0.08); border-left: 2px solid rgba(175,169,236,0.4); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 8px 12px; margin-top: 10px; font-size: 12px; color: var(--text2); line-height: 1.6; font-family: 'Courier New', monospace; }
 
-  /* ── deletable wrapper ── */
-  .deletable { position: relative; }
-  .del-btn { position: absolute; top: 6px; right: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(226,75,74,0.15); border: 1px solid rgba(226,75,74,0.25); color: #f09595; font-size: 13px; line-height: 1; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10; font-family: monospace; }
-  .edit-btn { position: absolute; top: 6px; right: 28px; width: 22px; height: 22px; border-radius: 50%; background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--amber); font-size: 11px; line-height: 1; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10; font-family: monospace; }
-  .deletable:hover .del-btn, .deletable:hover .edit-btn { display: flex; }
-
-  /* ── edit modal ── */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 20px; width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 12px; }
-  .modal-title { font-size: 14px; font-family: 'Courier New', monospace; color: var(--text2); margin-bottom: 2px; }
-
-  /* ── add button ── */
-  .add-btn { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding: 9px 14px; background: none; border: 1px dashed var(--border2); border-radius: var(--radius-sm); color: var(--text3); font-size: 12px; font-family: 'Courier New', monospace; cursor: pointer; width: 100%; transition: border-color 0.15s, color 0.15s; }
-  .add-btn:hover { border-color: var(--amber-border); color: var(--amber); }
-  .add-btn-icon { font-size: 16px; }
-
-  /* ── inline form ── */
-  .add-form { background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius); padding: 14px; margin-top: 10px; display: none; flex-direction: column; gap: 10px; }
-  .add-form.open { display: flex; }
-  .form-row { display: flex; gap: 8px; }
-  .form-field { display: flex; flex-direction: column; gap: 4px; flex: 1; }
-  .form-field label { font-size: 10px; font-family: 'Courier New', monospace; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); }
-  .form-field input, .form-field textarea, .form-field select {
-    background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--radius-sm);
-    color: var(--text); font-size: 13px; font-family: 'Courier New', monospace;
-    padding: 7px 10px; outline: none; transition: border-color 0.15s; resize: none;
-  }
-  .form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color: rgba(239,159,39,0.4); }
-  .form-field select option { background: var(--bg2); }
-  .form-actions { display: flex; gap: 8px; justify-content: flex-end; }
-  .btn-save { background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--amber); font-size: 12px; font-family: 'Courier New', monospace; padding: 7px 16px; border-radius: var(--radius-sm); cursor: pointer; transition: background 0.15s; }
-  .btn-save:hover { background: rgba(239,159,39,0.2); }
-  .btn-cancel { background: none; border: 1px solid var(--border2); color: var(--text3); font-size: 12px; font-family: 'Courier New', monospace; padding: 7px 16px; border-radius: var(--radius-sm); cursor: pointer; transition: color 0.15s; }
-  .btn-cancel:hover { color: var(--text2); }
-
-  /* ── Surprise timeline ── */
+  /* ── Surprise panel ── */
   .tl { display: flex; flex-direction: column; }
   .step { display: flex; gap: 0; position: relative; }
   .step:not(:last-child) .vline { position: absolute; left: 19px; top: 42px; bottom: -8px; width: 1px; background: var(--border2); }
   .dot { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
   .da { background: rgba(241,239,232,0.06); }
   .db { background: var(--purple-dim); border: 1px solid rgba(127,119,221,0.2); }
-  .dc { background: var(--amber-dim); border: 1px solid rgba(239,159,39,0.2); }
-  .step-body { padding: 0 0 1.75rem 16px; flex: 1; min-width: 0; }
+  .step-body { padding: 0 0 1.75rem 16px; flex: 1; }
   .step-time { font-size: 11px; font-family: 'Courier New', monospace; color: var(--text3); margin-bottom: 2px; }
   .step-title { font-size: 15px; font-weight: normal; color: var(--text); margin-bottom: 5px; }
   .step-desc { font-size: 13px; color: var(--text2); line-height: 1.65; font-family: 'Courier New', monospace; }
@@ -93,8 +76,8 @@
   .ad { background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius); margin-top: 12px; overflow: hidden; }
   .ad-img { background: #1a1a1a; height: 80px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border); }
   .ad-body { padding: 10px 14px; }
-  .ad-title-text { font-size: 14px; color: var(--text); margin-bottom: 3px; }
-  .ad-price { font-size: 15px; color: var(--green); margin-bottom: 3px; font-family: 'Courier New', monospace; }
+  .ad-title { font-size: 14px; color: var(--text); margin-bottom: 3px; }
+  .ad-price { font-size: 15px; font-weight: normal; color: var(--green); margin-bottom: 3px; font-family: 'Courier New', monospace; }
   .ad-meta { font-size: 11px; color: var(--text3); font-family: 'Courier New', monospace; }
   .ad-desc-text { font-size: 12px; color: var(--text2); margin-top: 6px; line-height: 1.5; font-family: 'Courier New', monospace; }
 
@@ -106,10 +89,10 @@
   .bubble.stress { background: rgba(226,75,74,0.15); border: 1px solid rgba(226,75,74,0.25); color: #f0a0a0; align-self: flex-end; border-bottom-right-radius: 4px; }
   .link-bubble { background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 8px 10px; align-self: flex-start; max-width: 82%; margin-top: -4px; }
   .link-site { font-size: 10px; color: var(--text3); margin-bottom: 2px; font-family: 'Courier New', monospace; }
-  .link-title-text { font-size: 12px; color: var(--text); margin-bottom: 2px; }
+  .link-title { font-size: 12px; color: var(--text); margin-bottom: 2px; }
   .link-sub { font-size: 11px; color: var(--text2); font-family: 'Courier New', monospace; }
 
-  /* ── Programme ── */
+  /* ── Programme panel ── */
   .day-label { font-size: 10px; font-family: 'Courier New', monospace; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin: 28px 0 14px; }
   .prog-tl { position: relative; padding-left: 22px; }
   .prog-tl::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: var(--border2); border-radius: 1px; }
@@ -136,10 +119,10 @@
   .dur-bar { height: 2px; border-radius: 2px; opacity: 0.4; }
   .dur-lbl { font-size: 11px; font-family: 'Courier New', monospace; }
 
-  /* ── Dart ── */
+  /* ── Dart panel ── */
   .dart-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; margin-top: 14px; }
   .dart-item { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; }
-  .dart-num { font-size: 20px; margin-bottom: 3px; font-family: 'Courier New', monospace; }
+  .dart-num { font-size: 20px; color: var(--text3); margin-bottom: 3px; font-family: 'Courier New', monospace; }
   .dart-name { font-size: 13px; color: var(--text); margin-bottom: 3px; }
   .dart-desc { font-size: 12px; color: var(--text2); line-height: 1.4; font-family: 'Courier New', monospace; }
   .ring-row { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
@@ -153,141 +136,162 @@
   .bull-card { border-radius: var(--radius-sm); padding: 12px 14px; border: 1px solid var(--border); }
   .bull-card.outer { background: var(--green-dim); border-color: rgba(29,158,117,0.25); }
   .bull-card.inner { background: rgba(226,75,74,0.1); border-color: rgba(226,75,74,0.25); }
-  .bull-title { font-size: 13px; margin-bottom: 2px; }
+  .bull-title { font-size: 13px; color: var(--text); margin-bottom: 2px; }
   .bull-card.outer .bull-title { color: #5dcaa5; }
   .bull-card.inner .bull-title { color: #f09595; }
   .bull-pts { font-size: 10px; font-family: 'Courier New', monospace; color: var(--text3); margin-bottom: 6px; }
   .bull-desc { font-size: 12px; line-height: 1.45; font-family: 'Courier New', monospace; }
   .bull-card.outer .bull-desc { color: #5dcaa5; }
   .bull-card.inner .bull-desc { color: #f09595; }
-
-  .tbd { margin-top: 32px; padding: 16px; background: var(--bg3); border: 1px dashed var(--border2); border-radius: var(--radius); text-align: center; }
-  .tbd p { font-size: 12px; font-family: 'Courier New', monospace; color: var(--text3); }
-  .tbd p + p { margin-top: 4px; font-size: 11px; }
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="header-top">
-    <h1>KBH</h1>
-    <span id="save-status" style="margin-left:auto;font-size:11px;font-family:'Courier New',monospace;color:var(--text3);opacity:0;transition:opacity 0.4s;"></span>
+    <h1>Svensexa</h1>
+    <span style="font-size:22px">🍺</span>
   </div>
-  <p class="header-sub">Stockholm → Köln &nbsp;·&nbsp; 2026</p>
+  <p class="header-sub">Stockholm → Köln &nbsp;·&nbsp; 2025</p>
 </div>
 
 <div class="tabs">
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('surprise')">Överraskningen</button>
-    <button class="tab-btn" onclick="switchTab('programme')">Programmet</button>
+    <button class="tab-btn active" onclick="switchTab('programme')">Programmet</button>
     <button class="tab-btn" onclick="switchTab('dart')">Pilspelet</button>
   </div>
 </div>
 
 <div class="panels">
-  <div class="panel active" id="tab-surprise">
+
+  <!-- ── TAB 1: ÖVERRASKNINGEN ── -->
+  <div class="panel" id="tab-surprise">
     <p class="sec-label">Klart så här långt</p>
-    <div class="tl" id="surprise-list"></div>
-    <div class="tbd">
-      <p>Steg 3 och framåt — TBD</p>
-      <p>Lägg till när ni bestämt vart han ska gå</p>
+    <div class="tl">
+
+      <div class="step">
+        <div class="vline"></div>
+        <div class="dot da">📷</div>
+        <div class="step-body">
+          <div class="step-time">Kvällen innan</div>
+          <div class="step-title">Ta cykeln — lägg ut annonsen</div>
+          <div class="step-desc">En i gruppen tar cykeln sent på kvällen. Lägg ut en fejkannons på Blocket från ett okänt konto, som om en tjuv säljer den vidare. Pris lite under marknadsvärde.</div>
+          <div class="ad">
+            <div class="ad-img">
+              <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                <circle cx="12" cy="34" r="7" stroke="#5a5855" stroke-width="1.5"/>
+                <circle cx="32" cy="34" r="7" stroke="#5a5855" stroke-width="1.5"/>
+                <path d="M12 34 L18 18 L28 18 L32 34" stroke="#5a5855" stroke-width="1.5" stroke-linejoin="round"/>
+                <path d="M18 18 L22 10 L30 14" stroke="#5a5855" stroke-width="1.5" stroke-linejoin="round"/>
+                <path d="M12 34 L32 34" stroke="#5a5855" stroke-width="1" stroke-dasharray="2 2"/>
+              </svg>
+            </div>
+            <div class="ad-body">
+              <div class="ad-title">Cykel, bra skick — snabbförsäljning</div>
+              <div class="ad-price">1 500 kr</div>
+              <div class="ad-meta">Stockholms stad &nbsp;·&nbsp; Idag</div>
+              <div class="ad-desc-text">Säljer snabbt, kan mötas idag. Kontant.</div>
+            </div>
+          </div>
+          <div class="tip">Använd ett foto från hans Instagram eller sociala medier — han ska känna igen cykeln direkt när han ser länken.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="dot db">💬</div>
+        <div class="step-body">
+          <div class="step-time">08:20</div>
+          <div class="step-title">En i gruppen skickar länken</div>
+          <div class="step-desc">Välj den i gruppen han minst skulle misstänka. Låtsas att det är en slump.</div>
+          <div class="chat">
+            <div class="chat-label">En kompis i gruppen</div>
+            <div class="bubble them">Hej är inte det här din cykel?? Råkade scrolla på Blocket</div>
+            <div class="link-bubble">
+              <div class="link-site">blocket.se</div>
+              <div class="link-title">Cykel, bra skick — snabbförsäljning</div>
+              <div class="link-sub">1 500 kr &nbsp;·&nbsp; Stockholms stad</div>
+            </div>
+            <div class="chat-label right">Han</div>
+            <div class="bubble stress">VA?? Det är ju min cykel wtf</div>
+            <div class="bubble stress">Vänta jag kollar</div>
+          </div>
+          <div class="tip">Den som skickar länken bör inte svara mer efter det — lämna honom i panik och låt nästa steg ta vid.</div>
+        </div>
+      </div>
+
     </div>
-    <button class="add-btn" onclick="toggleForm('surprise-form')"><span class="add-btn-icon">+</span> Lägg till steg</button>
-    <div class="add-form" id="surprise-form">
-      <div class="form-row">
-        <div class="form-field" style="max-width:100px">
-          <label>Tid</label>
-          <input id="sf-time" type="text" placeholder="08:30">
-        </div>
-        <div class="form-field">
-          <label>Rubrik</label>
-          <input id="sf-title" type="text" placeholder="Vad händer">
-        </div>
-      </div>
-      <div class="form-field">
-        <label>Beskrivning</label>
-        <textarea id="sf-desc" rows="2" placeholder="Beskriv steget..."></textarea>
-      </div>
-      <div class="form-actions">
-        <button class="btn-cancel" onclick="toggleForm('surprise-form')">Avbryt</button>
-        <button class="btn-save" onclick="addSurpriseStep()">Spara</button>
-      </div>
+
+    <div style="margin-top: 32px; padding: 16px; background: var(--bg3); border: 1px dashed var(--border2); border-radius: var(--radius); text-align: center;">
+      <p style="font-size: 12px; font-family: 'Courier New', monospace; color: var(--text3);">Steg 3 och framåt — TBD</p>
+      <p style="font-size: 11px; font-family: 'Courier New', monospace; color: var(--text3); margin-top: 4px;">Lägg till när ni bestämt vart han ska gå</p>
     </div>
   </div>
 
-  <div class="panel" id="tab-programme">
+  <!-- ── TAB 2: PROGRAMMET ── -->
+  <div class="panel active" id="tab-programme">
     <p class="sec-label">Fredag &amp; Lördag</p>
+
     <div class="day-label">Fredag</div>
-    <div class="prog-tl" id="friday-list"></div>
-    <button class="add-btn" onclick="toggleForm('friday-form')"><span class="add-btn-icon">+</span> Lägg till aktivitet</button>
-    <div class="add-form" id="friday-form">
-      <div class="form-row">
-        <div class="form-field" style="max-width:80px">
-          <label>Tid</label>
-          <input id="ff-time" type="text" placeholder="20:00">
-        </div>
-        <div class="form-field" style="max-width:70px">
-          <label>Emoji</label>
-          <input id="ff-emoji" type="text" placeholder="🍺">
-        </div>
-        <div class="form-field">
-          <label>Titel</label>
-          <input id="ff-title" type="text" placeholder="Aktivitetens namn">
+    <div class="prog-tl">
+      <div class="ev hl">
+        <div class="tb">08:00</div>
+        <div class="card hl"><p class="ct"><span class="ci">🫵</span>Kidnappa Ludvig</p></div>
+      </div>
+      <div class="ev tr">
+        <div class="tb">09:00</div>
+        <div class="card tr"><p class="ct"><span class="ci">🚗</span>Åka till Arlanda</p></div>
+      </div>
+      <div class="ev tr">
+        <div class="tb">12:25</div>
+        <div class="card tr"><p class="ct"><span class="ci">✈️</span>Flyg → Köln</p></div>
+      </div>
+      <div class="ev tr">
+        <div class="tb">14:30</div>
+        <div class="card tr"><p class="ct"><span class="ci">🛬</span>Framme i Köln</p></div>
+      </div>
+      <div class="ev br">
+        <div class="tb">15:30</div>
+        <div class="card br">
+          <p class="ct"><span class="ci">🍺</span>Altstadt &amp; Kölsch</p>
+          <div class="dart-note">🎯 Darttavla — Ludvig kastar, pilen bestämmer aktivitet &amp; utmaning</div>
+          <div class="dur"><div class="dur-bar" style="width:90px;background:var(--green)"></div><span class="dur-lbl" style="color:var(--text3)">15:30 – 20:00</span></div>
         </div>
       </div>
-      <div class="form-field">
-        <label>Färg</label>
-        <select id="ff-color">
-          <option value="hl">Guld</option>
-          <option value="tr">Blå</option>
-          <option value="br">Grön</option>
-          <option value="rd">Korall</option>
-          <option value="pu">Lila</option>
-          <option value="pk">Rosa</option>
-        </select>
-      </div>
-      <div class="form-actions">
-        <button class="btn-cancel" onclick="toggleForm('friday-form')">Avbryt</button>
-        <button class="btn-save" onclick="addEvent('friday')">Spara</button>
+      <div class="ev rd">
+        <div class="tb">20:00</div>
+        <div class="card rd"><p class="ct"><span class="ci">🥩</span>Peters Brauhaus</p></div>
       </div>
     </div>
 
-    <div class="day-label" style="margin-top:28px">Lördag</div>
-    <div class="prog-tl" id="saturday-list"></div>
-    <button class="add-btn" onclick="toggleForm('saturday-form')"><span class="add-btn-icon">+</span> Lägg till aktivitet</button>
-    <div class="add-form" id="saturday-form">
-      <div class="form-row">
-        <div class="form-field" style="max-width:80px">
-          <label>Tid</label>
-          <input id="sf2-time" type="text" placeholder="20:00">
-        </div>
-        <div class="form-field" style="max-width:70px">
-          <label>Emoji</label>
-          <input id="sf2-emoji" type="text" placeholder="🍺">
-        </div>
-        <div class="form-field">
-          <label>Titel</label>
-          <input id="sf2-title" type="text" placeholder="Aktivitetens namn">
+    <div class="day-label">Lördag</div>
+    <div class="prog-tl">
+      <div class="ev hl">
+        <div class="tb">10:30</div>
+        <div class="card hl"><p class="ct"><span class="ci">🥐</span>Frukost — Zadem</p></div>
+      </div>
+      <div class="ev rd">
+        <div class="tb">14:30</div>
+        <div class="card rd">
+          <p class="ct"><span class="ci">🪓</span>Yxkastning</p>
+          <div class="dur"><div class="dur-bar" style="width:65px;background:var(--coral)"></div><span class="dur-lbl" style="color:var(--text3)">14:30 – 16:15</span></div>
         </div>
       </div>
-      <div class="form-field">
-        <label>Färg</label>
-        <select id="sf2-color">
-          <option value="hl">Guld</option>
-          <option value="tr">Blå</option>
-          <option value="br">Grön</option>
-          <option value="rd">Korall</option>
-          <option value="pu">Lila</option>
-          <option value="pk">Rosa</option>
-        </select>
+      <div class="ev tr">
+        <div class="tb">16:15</div>
+        <div class="card tr"><p class="ct"><span class="ci">🏨</span>Tillbaka till hotellet</p></div>
       </div>
-      <div class="form-actions">
-        <button class="btn-cancel" onclick="toggleForm('saturday-form')">Avbryt</button>
-        <button class="btn-save" onclick="addEvent('saturday')">Spara</button>
+      <div class="ev pu">
+        <div class="tb">17:30</div>
+        <div class="card pu"><p class="ct"><span class="ci">🧠</span>Quiz</p></div>
+      </div>
+      <div class="ev pk">
+        <div class="tb">20:30</div>
+        <div class="card pk"><p class="ct"><span class="ci">🍽️</span>IKIGAI</p></div>
       </div>
     </div>
   </div>
 
+  <!-- ── TAB 3: PILSPELET ── -->
   <div class="panel" id="tab-dart">
     <p class="sec-label">Ringsystemet</p>
     <div class="ring-row">
@@ -295,50 +299,59 @@
       <div class="ring-rule"><span class="ring-badge rd2">Dubbel</span><span class="ring-text">Utmaningen gäller brudgummen OCH personen till vänster om honom.</span></div>
       <div class="ring-rule"><span class="ring-badge rt">Trippel</span><span class="ring-text">Utmaningen gäller hela gruppen — ingen slipper undan.</span></div>
     </div>
+
     <hr class="divider">
     <p class="sec-label">Sektioner 1–20</p>
-    <div class="dart-grid" id="dart-list"></div>
-    <button class="add-btn" onclick="toggleForm('dart-form')" style="margin-top:16px"><span class="add-btn-icon">+</span> Lägg till utmaning</button>
-    <div class="add-form" id="dart-form">
-      <div class="form-field">
-        <label>Namn</label>
-        <input id="df-name" type="text" placeholder="Utmaningens namn">
-      </div>
-      <div class="form-field">
-        <label>Beskrivning</label>
-        <textarea id="df-desc" rows="2" placeholder="Vad måste han göra?"></textarea>
-      </div>
-      <div class="form-actions">
-        <button class="btn-cancel" onclick="toggleForm('dart-form')">Avbryt</button>
-        <button class="btn-save" onclick="addDartItem()">Spara</button>
-      </div>
+    <div class="dart-grid">
+      <div class="dart-item"><div class="dart-num" style="color:var(--green)">1</div><div class="dart-name">Drick upp</div><div class="dart-desc">Ta slut på ditt nuvarande glas.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--coral)">2</div><div class="dart-name">Roasta mig</div><div class="dart-desc">Alla säger en pinsam sak om brudgummen. 20 sek var.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--purple)">3</div><div class="dart-name">Telefon-roulette</div><div class="dart-desc">Gruppen väljer en kontakt. Han skickar ett röstmeddelande.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--green)">4</div><div class="dart-name">Nästa runda på dig</div><div class="dart-desc">Brudgummen bjuder nästa runda på alla.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--coral)">5</div><div class="dart-name">Sanningsbomb</div><div class="dart-desc">Gruppen ställer en fråga. Måste svara ärligt inför alla.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--purple)">6</div><div class="dart-name">Kostym på</div><div class="dart-desc">Han tar på sig ett nytt plagg tills nästa kast.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--amber)">7</div><div class="dart-name">Bästisens val</div><div class="dart-desc">Bäste mannen bestämmer fritt. Inga överklaganden.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--green)">8</div><div class="dart-name">Alla tar en shot</div><div class="dart-desc">Hela gänget tar en shot. Inga undantag.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--coral)">9</div><div class="dart-name">Kissa-timer</div><div class="dart-desc">Nästa gång han behöver på toaletten frågar han om lov högt.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--blue)">10</div><div class="dart-name">Grupptag</div><div class="dart-desc">Gruppen röstar fram en utmaning alla gör tillsammans.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--purple)">11</div><div class="dart-name">Foto-uppdrag</div><div class="dart-desc">Gruppen pekar ut en okänd. Han tar ett gemensamt foto.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--coral)">12</div><div class="dart-name">Bygg en historia</div><div class="dart-desc">Alla berättar en mening var om brudgummen, runt bordet.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--green)">13</div><div class="dart-name">Otur — drick dubbelt</div><div class="dart-desc">Han dricker dubbelt så mycket som alla andra just nu.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--purple)">14</div><div class="dart-name">Serenaden</div><div class="dart-desc">Han sjunger 30 sek av en låt gruppen väljer.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--blue)">15</div><div class="dart-name">Tummen ner</div><div class="dart-desc">Siste person att lägga tummen på bordet dricker.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--amber)">16</div><div class="dart-name">Vild-kort</div><div class="dart-desc">Gruppen röstar fram valfri utmaning. Majoriteten vinner.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--coral)">17</div><div class="dart-name">Livets lågpunkt</div><div class="dart-desc">Han berättar sin mest pinsamma historia från de senaste 5 åren.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--green)">18</div><div class="dart-name">Byt dryck</div><div class="dart-desc">Han och personen till höger byter glas i 10 minuter.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--purple)">19</div><div class="dart-name">Högtalaruppdrag</div><div class="dart-desc">Ber en okänd person önska brudgummen lycka till inför bröllopet.</div></div>
+      <div class="dart-item"><div class="dart-num" style="color:var(--amber)">20</div><div class="dart-name">Frikort</div><div class="dart-desc">Tur! Sparar ett frikort att använda mot valfri utmaning senare.</div></div>
     </div>
+
     <hr class="divider">
     <p class="sec-label">Mitten</p>
     <div class="bull-row">
-      <div class="bull-card outer"><div class="bull-title">Bull — 25p</div><div class="bull-pts">Yttre ringen</div><div class="bull-desc">Alla väljer varsitt nummer 1–20. Det som stämmer med hans svar avgör nästa utmaning.</div></div>
-      <div class="bull-card inner"><div class="bull-title">Bullseye — 50p</div><div class="bull-pts">Innersta punkten</div><div class="bull-desc">Ringer partnern på högtalaren och läser upp en kärleksdikt gruppen skriver live — ett ord var.</div></div>
+      <div class="bull-card outer">
+        <div class="bull-title">Bull — 25p</div>
+        <div class="bull-pts">Yttre ringen</div>
+        <div class="bull-desc">Alla väljer varsitt nummer 1–20. Det som stämmer med hans svar avgör nästa utmaning.</div>
+      </div>
+      <div class="bull-card inner">
+        <div class="bull-title">Bullseye — 50p</div>
+        <div class="bull-pts">Innersta punkten</div>
+        <div class="bull-desc">Ringer partnern på högtalaren och läser upp en kärleksdikt gruppen skriver live — ett ord var.</div>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="modal-overlay" id="edit-modal" onclick="if(event.target===this)closeEdit()">
-  <div class="modal">
-    <div class="modal-title" id="edit-modal-title">Edit</div>
-    <div id="edit-modal-fields" style="display:flex;flex-direction:column;gap:10px;"></div>
-    <div class="form-actions">
-      <button class="btn-cancel" onclick="closeEdit()">Cancel</button>
-      <button class="btn-save" onclick="saveEdit()">Save</button>
-    </div>
-  </div>
 </div>
 
 <script>
 const DART_COLORS = ['var(--green)','var(--coral)','var(--purple)','var(--amber)','var(--blue)'];
 const DB_URL = 'https://hidden-89717-default-rtdb.europe-west1.firebasedatabase.app/data.json';
+const CACHE_KEY = 'kbh_cache';
 
-let _editCtx = null; // { list, id }
+let surprise = [], friday = [], saturday = [], darts = [];
+let _editCtx = null;
 
+/* ── time sorting ── */
 function parseTime(t) {
   if (!t || t === '—') return 9999;
   const m = t.match(/(\d{1,2}):(\d{2})/);
@@ -348,8 +361,7 @@ function sortByTime(arr) {
   return [...arr].sort((a, b) => parseTime(a.time) - parseTime(b.time));
 }
 
-let surprise = [], friday = [], saturday = [], darts = [];
-
+/* ── status + cloud ── */
 function showStatus(msg, ok = true) {
   const el = document.getElementById('save-status');
   el.textContent = msg;
@@ -371,10 +383,7 @@ async function saveToCloud() {
     });
     const ms = Math.round(performance.now() - t0);
     const json = await res.json();
-    if (!res.ok) {
-      console.error(`[Firebase] PUT failed — HTTP ${res.status} (${ms}ms)`, json);
-      throw new Error();
-    }
+    if (!res.ok) { console.error(`[Firebase] PUT failed — HTTP ${res.status} (${ms}ms)`, json); throw new Error(); }
     console.log(`[Firebase] PUT success — HTTP ${res.status} (${ms}ms)`, json);
     writeCache({ surprise, friday, saturday, darts });
     showStatus('Saved ✓');
@@ -384,10 +393,18 @@ async function saveToCloud() {
   }
 }
 
-/* ── renderers ── */
+/* ── cache ── */
+function loadCache() {
+  try { const v = localStorage.getItem(CACHE_KEY); return v ? JSON.parse(v) : null; } catch(e) { return null; }
+}
+function writeCache(data) {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch(e) {}
+}
 
+/* ── renderers ── */
 function renderSurprise() {
   const el = document.getElementById('surprise-list');
+  if (!el) return;
   el.innerHTML = surprise.map((s, i) => {
     const isLast = i === surprise.length - 1;
     return `<div class="step deletable">
@@ -407,6 +424,7 @@ function renderSurprise() {
 function renderEvents(day) {
   const data = sortByTime(day === 'friday' ? friday : saturday);
   const el = document.getElementById(day + '-list');
+  if (!el) return;
   el.innerHTML = data.map(e => `
     <div class="ev ${e.color} deletable">
       <button class="edit-btn" onclick="openEdit('${day}',${e.id})">✎</button>
@@ -422,6 +440,7 @@ function renderEvents(day) {
 
 function renderDarts() {
   const el = document.getElementById('dart-list');
+  if (!el) return;
   el.innerHTML = darts.map((d, i) => `
     <div class="dart-item deletable">
       <button class="edit-btn" onclick="openEdit('darts',${d.id})">✎</button>
@@ -433,10 +452,8 @@ function renderDarts() {
 }
 
 /* ── add/delete ── */
-
 function toggleForm(id) {
-  const f = document.getElementById(id);
-  f.classList.toggle('open');
+  document.getElementById(id).classList.toggle('open');
 }
 
 function addSurpriseStep() {
@@ -444,10 +461,8 @@ function addSurpriseStep() {
   const title = document.getElementById('sf-title').value.trim();
   const desc  = document.getElementById('sf-desc').value.trim();
   if (!title) return;
-  const id = Date.now();
-  surprise.push({ id, time: time || '—', title, desc });
-  renderSurprise();
-  saveToCloud();
+  surprise.push({ id: Date.now(), time: time || '—', title, desc });
+  renderSurprise(); saveToCloud();
   document.getElementById('sf-time').value = '';
   document.getElementById('sf-title').value = '';
   document.getElementById('sf-desc').value = '';
@@ -465,8 +480,7 @@ function addEvent(day) {
   arr.push({ id: Date.now(), time: time || '—', emoji: emoji || '📌', title, color });
   if (day === 'friday') friday = sortByTime(friday);
   else saturday = sortByTime(saturday);
-  renderEvents(day);
-  saveToCloud();
+  renderEvents(day); saveToCloud();
   document.getElementById(prefix + '-time').value = '';
   document.getElementById(prefix + '-emoji').value = '';
   document.getElementById(prefix + '-title').value = '';
@@ -478,31 +492,28 @@ function addDartItem() {
   const desc = document.getElementById('df-desc').value.trim();
   if (!name) return;
   darts.push({ id: Date.now(), name, desc });
-  renderDarts();
-  saveToCloud();
+  renderDarts(); saveToCloud();
   document.getElementById('df-name').value = '';
   document.getElementById('df-desc').value = '';
   toggleForm('dart-form');
 }
 
+/* ── edit modal ── */
 function openEdit(list, id) {
   _editCtx = { list, id };
   const fields = document.getElementById('edit-modal-fields');
   const titles = { surprise: 'Edit step', friday: 'Edit event', saturday: 'Edit event', darts: 'Edit challenge' };
   document.getElementById('edit-modal-title').textContent = titles[list] || 'Edit';
 
-  let item;
-  if (list === 'surprise') item = surprise.find(x => x.id === id);
-  else if (list === 'friday') item = friday.find(x => x.id === id);
-  else if (list === 'saturday') item = saturday.find(x => x.id === id);
-  else if (list === 'darts') item = darts.find(x => x.id === id);
+  const src = list === 'surprise' ? surprise : list === 'friday' ? friday : list === 'saturday' ? saturday : darts;
+  const item = src.find(x => x.id === id);
+  if (!item) return;
 
   if (list === 'darts') {
     fields.innerHTML = `
       <div class="form-field"><label>Name</label><input id="ef-name" value="${item.name}"></div>
       <div class="form-field"><label>Description</label><textarea id="ef-desc" rows="2">${item.desc}</textarea></div>`;
   } else if (list === 'friday' || list === 'saturday') {
-    const colors = ['hl','tr','br','rd','pu','pk'];
     const colorNames = { hl:'Gold', tr:'Blue', br:'Green', rd:'Coral', pu:'Purple', pk:'Pink' };
     fields.innerHTML = `
       <div class="form-row">
@@ -511,7 +522,7 @@ function openEdit(list, id) {
         <div class="form-field"><label>Title</label><input id="ef-title" value="${item.title}"></div>
       </div>
       <div class="form-field"><label>Color</label>
-        <select id="ef-color">${colors.map(c => `<option value="${c}"${item.color===c?' selected':''}>${colorNames[c]}</option>`).join('')}</select>
+        <select id="ef-color">${['hl','tr','br','rd','pu','pk'].map(c => `<option value="${c}"${item.color===c?' selected':''}>${colorNames[c]}</option>`).join('')}</select>
       </div>`;
   } else {
     fields.innerHTML = `
@@ -546,12 +557,11 @@ function saveEdit() {
   }
 
   if (list === 'surprise') { surprise = patch(surprise); renderSurprise(); }
-  else if (list === 'friday') { friday = patch(friday); renderEvents('friday'); }
-  else if (list === 'saturday') { saturday = patch(saturday); renderEvents('saturday'); }
+  else if (list === 'friday') { friday = sortByTime(patch(friday)); renderEvents('friday'); }
+  else if (list === 'saturday') { saturday = sortByTime(patch(saturday)); renderEvents('saturday'); }
   else if (list === 'darts') { darts = patch(darts); renderDarts(); }
 
-  closeEdit();
-  saveToCloud();
+  closeEdit(); saveToCloud();
 }
 
 function deleteItem(list, id) {
@@ -564,13 +574,14 @@ function deleteItem(list, id) {
 
 function switchTab(id) {
   document.querySelectorAll('.tab-btn').forEach((b, i) => {
-    b.classList.toggle('active', ['surprise','programme','dart'][i] === id);
+    b.classList.toggle('active', ['programme','dart'][i] === id);
   });
   document.querySelectorAll('.panel').forEach(p => {
     p.classList.toggle('active', p.id === 'tab-' + id);
   });
 }
 
+/* ── default data ── */
 const DEFAULT_DATA = {
   surprise: [
     { id: 1, time: 'Kvällen innan', title: 'Ta cykeln', desc: 'En i gruppen tar cykeln sent på kvällen och ställer den på en annan plats.' },
@@ -595,76 +606,53 @@ const DEFAULT_DATA = {
     { id:5, time:'20:30', emoji:'🍽️', title:'IKIGAI', color:'pk' }
   ],
   darts: [
-    { id:1,  name:'Drick upp',           desc:'Ta slut på ditt nuvarande glas.' },
-    { id:2,  name:'Roasta mig',          desc:'Alla säger en pinsam sak om brudgummen. 20 sek var.' },
-    { id:3,  name:'Telefon-roulette',    desc:'Gruppen väljer en kontakt. Han skickar ett röstmeddelande.' },
-    { id:4,  name:'Nästa runda på dig',  desc:'Brudgummen bjuder nästa runda på alla.' },
-    { id:5,  name:'Sanningsbomb',        desc:'Gruppen ställer en fråga. Måste svara ärligt inför alla.' },
-    { id:6,  name:'Kostym på',           desc:'Han tar på sig ett nytt plagg tills nästa kast.' },
-    { id:7,  name:'Bästisens val',       desc:'Bäste mannen bestämmer fritt. Inga överklaganden.' },
-    { id:8,  name:'Alla tar en shot',    desc:'Hela gänget tar en shot. Inga undantag.' },
-    { id:9,  name:'Kissa-timer',         desc:'Nästa gång han behöver på toaletten frågar han om lov högt.' },
-    { id:10, name:'Grupptag',            desc:'Gruppen röstar fram en utmaning alla gör tillsammans.' },
-    { id:11, name:'Foto-uppdrag',        desc:'Gruppen pekar ut en okänd. Han tar ett gemensamt foto.' },
-    { id:12, name:'Bygg en historia',    desc:'Alla berättar en mening var om brudgummen, runt bordet.' },
-    { id:13, name:'Otur — drick dubbelt',desc:'Han dricker dubbelt så mycket som alla andra just nu.' },
-    { id:14, name:'Serenaden',           desc:'Han sjunger 30 sek av en låt gruppen väljer.' },
-    { id:15, name:'Tummen ner',          desc:'Siste person att lägga tummen på bordet dricker.' },
-    { id:16, name:'Vild-kort',           desc:'Gruppen röstar fram valfri utmaning. Majoriteten vinner.' },
-    { id:17, name:'Livets lågpunkt',     desc:'Han berättar sin mest pinsamma historia från de senaste 5 åren.' },
-    { id:18, name:'Byt dryck',           desc:'Han och personen till höger byter glas i 10 minuter.' },
-    { id:19, name:'Högtalaruppdrag',     desc:'Ber en okänd person önska brudgummen lycka till inför bröllopet.' },
-    { id:20, name:'Frikort',             desc:'Tur! Sparar ett frikort att använda mot valfri utmaning senare.' }
+    { id:1,  name:'Drick upp',            desc:'Ta slut på ditt nuvarande glas.' },
+    { id:2,  name:'Roasta mig',           desc:'Alla säger en pinsam sak om brudgummen. 20 sek var.' },
+    { id:3,  name:'Telefon-roulette',     desc:'Gruppen väljer en kontakt. Han skickar ett röstmeddelande.' },
+    { id:4,  name:'Nästa runda på dig',   desc:'Brudgummen bjuder nästa runda på alla.' },
+    { id:5,  name:'Sanningsbomb',         desc:'Gruppen ställer en fråga. Måste svara ärligt inför alla.' },
+    { id:6,  name:'Kostym på',            desc:'Han tar på sig ett nytt plagg tills nästa kast.' },
+    { id:7,  name:'Bästisens val',        desc:'Bäste mannen bestämmer fritt. Inga överklaganden.' },
+    { id:8,  name:'Alla tar en shot',     desc:'Hela gänget tar en shot. Inga undantag.' },
+    { id:9,  name:'Kissa-timer',          desc:'Nästa gång han behöver på toaletten frågar han om lov högt.' },
+    { id:10, name:'Grupptag',             desc:'Gruppen röstar fram en utmaning alla gör tillsammans.' },
+    { id:11, name:'Foto-uppdrag',         desc:'Gruppen pekar ut en okänd. Han tar ett gemensamt foto.' },
+    { id:12, name:'Bygg en historia',     desc:'Alla berättar en mening var om brudgummen, runt bordet.' },
+    { id:13, name:'Otur — drick dubbelt', desc:'Han dricker dubbelt så mycket som alla andra just nu.' },
+    { id:14, name:'Serenaden',            desc:'Han sjunger 30 sek av en låt gruppen väljer.' },
+    { id:15, name:'Tummen ner',           desc:'Siste person att lägga tummen på bordet dricker.' },
+    { id:16, name:'Vild-kort',            desc:'Gruppen röstar fram valfri utmaning. Majoriteten vinner.' },
+    { id:17, name:'Livets lågpunkt',      desc:'Han berättar sin mest pinsamma historia från de senaste 5 åren.' },
+    { id:18, name:'Byt dryck',            desc:'Han och personen till höger byter glas i 10 minuter.' },
+    { id:19, name:'Högtalaruppdrag',      desc:'Ber en okänd person önska brudgummen lycka till inför bröllopet.' },
+    { id:20, name:'Frikort',              desc:'Tur! Sparar ett frikort att använda mot valfri utmaning senare.' }
   ]
 };
 
-const CACHE_KEY = 'kbh_cache';
-
-function loadCache() {
-  try { const v = localStorage.getItem(CACHE_KEY); return v ? JSON.parse(v) : null; } catch(e) { return null; }
-}
-function writeCache(data) {
-  try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch(e) {}
-}
-
+/* ── boot ── */
 function applyData(d) {
-  surprise = d.surprise && d.surprise.length ? d.surprise : DEFAULT_DATA.surprise;
-  friday   = d.friday   && d.friday.length   ? d.friday   : DEFAULT_DATA.friday;
-  saturday = d.saturday && d.saturday.length ? d.saturday : DEFAULT_DATA.saturday;
-  darts    = d.darts    && d.darts.length    ? d.darts    : DEFAULT_DATA.darts;
-  renderSurprise();
-  renderEvents('friday');
-  renderEvents('saturday');
-  renderDarts();
+  surprise = d.surprise?.length ? d.surprise : DEFAULT_DATA.surprise;
+  friday   = d.friday?.length   ? d.friday   : DEFAULT_DATA.friday;
+  saturday = d.saturday?.length ? d.saturday : DEFAULT_DATA.saturday;
+  darts    = d.darts?.length    ? d.darts    : DEFAULT_DATA.darts;
+  renderSurprise(); renderEvents('friday'); renderEvents('saturday'); renderDarts();
 }
 
 const cached = loadCache();
-if (cached) {
-  console.log('[Cache] Instant render from localStorage');
-  applyData(cached);
-} else {
-  console.log('[Cache] No cache — waiting for JSONBin');
-}
+if (cached) { console.log('[Cache] Instant render from localStorage'); applyData(cached); }
+else { console.log('[Cache] No cache — waiting for Firebase'); }
 
-const _loadUrl = DB_URL;
-console.log('[Firebase] GET →', _loadUrl);
-const _loadT0 = performance.now();
-fetch(_loadUrl)
-  .then(r => {
-    console.log(`[Firebase] GET response — HTTP ${r.status} (${Math.round(performance.now() - _loadT0)}ms)`);
-    return r.json();
-  })
+console.log('[Firebase] GET →', DB_URL);
+const _t0 = performance.now();
+fetch(DB_URL)
+  .then(r => { console.log(`[Firebase] GET response — HTTP ${r.status} (${Math.round(performance.now() - _t0)}ms)`); return r.json(); })
   .then(d => {
     console.log('[Firebase] GET data:', d);
-    const seeded = !d || !d.surprise;
-    if (seeded) {
+    if (!d || !d.surprise) {
       console.log('[Firebase] DB empty — seeding with defaults');
-      applyData(DEFAULT_DATA);
-      writeCache(DEFAULT_DATA);
-      saveToCloud();
+      applyData(DEFAULT_DATA); writeCache(DEFAULT_DATA); saveToCloud();
     } else {
-      applyData(d);
-      writeCache(d);
+      applyData(d); writeCache(d);
       console.log('[Cache] Updated localStorage cache');
     }
   })
