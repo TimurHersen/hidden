@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KBH 🗓️</title>
+<title>Köln! 🗓️</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -129,9 +129,9 @@
   .dur-lbl { font-size: 11px; font-family: 'Courier New', monospace; }
 
   /* ── Dart ── */
-  .dart-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; margin-top: 14px; }
+  .dart-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; margin-top: 14px; }
   .dart-item { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; }
-  .dart-num { font-size: 20px; margin-bottom: 3px; font-family: 'Courier New', monospace; }
+  .dart-range { font-size: 15px; font-family: 'Courier New', monospace; font-weight: bold; margin-bottom: 4px; }
   .dart-name { font-size: 13px; color: var(--text); margin-bottom: 3px; }
   .dart-desc { font-size: 12px; color: var(--text2); line-height: 1.4; font-family: 'Courier New', monospace; }
   .ring-row { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
@@ -282,13 +282,23 @@
       <div class="ring-rule"><span class="ring-badge rt">Trippel</span><span class="ring-text">Utmaningen gäller hela gruppen — ingen slipper undan.</span></div>
     </div>
     <hr class="divider">
-    <p class="sec-label">Sektioner 1–20</p>
+    <p class="sec-label">Poängintervall 0 – 180</p>
     <div class="dart-grid" id="dart-list"></div>
     <button class="add-btn" onclick="toggleForm('dart-form')" style="margin-top:16px"><span class="add-btn-icon">+</span> Lägg till utmaning</button>
     <div class="add-form" id="dart-form">
-      <div class="form-field">
-        <label>Namn</label>
-        <input id="df-name" type="text" placeholder="Utmaningens namn">
+      <div class="form-row">
+        <div class="form-field" style="max-width:80px">
+          <label>Från (min)</label>
+          <input id="df-min" type="number" min="0" max="180" placeholder="0">
+        </div>
+        <div class="form-field" style="max-width:80px">
+          <label>Till (max)</label>
+          <input id="df-max" type="number" min="0" max="180" placeholder="20">
+        </div>
+        <div class="form-field">
+          <label>Namn</label>
+          <input id="df-name" type="text" placeholder="Utmaningens namn">
+        </div>
       </div>
       <div class="form-field">
         <label>Beskrivning</label>
@@ -301,10 +311,7 @@
     </div>
     <hr class="divider">
     <p class="sec-label">Mitten</p>
-    <div class="bull-row">
-      <div class="bull-card outer"><div class="bull-title">Bull — 25p</div><div class="bull-pts">Yttre ringen</div><div class="bull-desc">Alla väljer varsitt nummer 1–20. Det som stämmer med hans svar avgör nästa utmaning.</div></div>
-      <div class="bull-card inner"><div class="bull-title">Bullseye — 50p</div><div class="bull-pts">Innersta punkten</div><div class="bull-desc">Ringer partnern på högtalaren och läser upp en kärleksdikt gruppen skriver live — ett ord var.</div></div>
-    </div>
+    <div class="bull-row" id="bull-list"></div>
   </div>
 
   <!-- ── Tips/Önskemål ── -->
@@ -371,7 +378,6 @@
 </div>
 
 <script>
-const DART_COLORS = ['var(--green)','var(--coral)','var(--purple)','var(--amber)','var(--blue)'];
 const DB_URL = 'https://hidden-89717-default-rtdb.europe-west1.firebasedatabase.app/data.json';
 
 const CAT_LABELS = { bar:'Bar', mat:'Mat', sev:'Sevärdhet', akt:'Aktivitet', kul:'Kul' };
@@ -389,7 +395,7 @@ function sortByTime(arr) {
   return [...arr].sort((a, b) => parseTime(a.time) - parseTime(b.time));
 }
 
-let friday = [], saturday = [], darts = [], tips = [];
+let friday = [], saturday = [], darts = [], tips = [], bull = [];
 
 function showStatus(msg, ok = true) {
   const el = document.getElementById('save-status');
@@ -406,7 +412,7 @@ async function saveToCloud() {
     const res = await fetch(DB_URL, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ friday, saturday, darts, tips })
+      body: JSON.stringify({ friday, saturday, darts, tips, bull })
     });
     const ms = Math.round(performance.now() - t0);
     const json = await res.json();
@@ -436,15 +442,46 @@ function renderEvents(day) {
     </div>`).join('');
 }
 
+function dartRangeColor(min) {
+  if (min === 0 && min === (darts.find(d => d.min === 0 && d.max === 0) || {}).max) return 'var(--text3)';
+  if (min <= 20)  return 'var(--blue)';
+  if (min <= 40)  return '#5dcaa5';
+  if (min <= 60)  return 'var(--green)';
+  if (min <= 80)  return '#b8c44a';
+  if (min <= 100) return 'var(--amber)';
+  if (min <= 120) return '#f0997b';
+  if (min <= 140) return 'var(--coral)';
+  if (min <= 159) return 'var(--purple)';
+  if (min <= 179) return 'var(--pink)';
+  return '#f5c060';
+}
+function dartRangeLabel(d) {
+  if (d.min === d.max) return String(d.min);
+  return d.min + '–' + d.max;
+}
 function renderDarts() {
   const el = document.getElementById('dart-list');
-  el.innerHTML = darts.map((d, i) => `
-    <div class="dart-item deletable">
+  const sorted = [...darts].sort((a, b) => a.min - b.min);
+  el.innerHTML = sorted.map(d => `
+    <div class="dart-item deletable" style="${!d.name ? 'border-style:dashed;opacity:0.6;' : ''}">
       <button class="edit-btn" onclick="openEdit('darts',${d.id})">✎</button>
       <button class="del-btn" onclick="deleteItem('darts',${d.id})">×</button>
-      <div class="dart-num" style="color:${DART_COLORS[i % DART_COLORS.length]}">${i + 1}</div>
-      <div class="dart-name">${d.name}</div>
-      <div class="dart-desc">${d.desc}</div>
+      <div class="dart-range" style="color:${dartRangeColor(d.min)}">${dartRangeLabel(d)}</div>
+      <div class="dart-name" style="${!d.name ? 'color:var(--text3);font-style:italic;' : ''}">${d.name || 'Fyll i utmaning...'}</div>
+      ${d.desc ? `<div class="dart-desc">${d.desc}</div>` : ''}
+    </div>`).join('');
+}
+
+function renderBull() {
+  const el = document.getElementById('bull-list');
+  if (!el) return;
+  const styles = { 'bull-outer': 'outer', 'bull-inner': 'inner' };
+  el.innerHTML = bull.map(b => `
+    <div class="bull-card ${styles[b.id] || 'outer'} deletable">
+      <button class="edit-btn" onclick="openEdit('bull','${b.id}')" style="top:6px;right:4px">✎</button>
+      <div class="bull-title">${b.title}</div>
+      <div class="bull-pts">${b.sub}</div>
+      <div class="bull-desc" style="${!b.desc ? 'opacity:0.45;font-style:italic;' : ''}">${b.desc || 'Fyll i utmaning...'}</div>
     </div>`).join('');
 }
 
@@ -516,12 +553,16 @@ function addEvent(day) {
 }
 
 function addDartItem() {
+  const min  = parseInt(document.getElementById('df-min').value) || 0;
+  const max  = parseInt(document.getElementById('df-max').value) || 0;
   const name = document.getElementById('df-name').value.trim();
   const desc = document.getElementById('df-desc').value.trim();
   if (!name) return;
-  darts.push({ id: Date.now(), name, desc });
+  darts.push({ id: Date.now(), min, max, name, desc });
   renderDarts();
   saveToCloud();
+  document.getElementById('df-min').value = '';
+  document.getElementById('df-max').value = '';
   document.getElementById('df-name').value = '';
   document.getElementById('df-desc').value = '';
   toggleForm('dart-form');
@@ -547,7 +588,7 @@ function addTip() {
 function openEdit(list, id) {
   _editCtx = { list, id };
   const fields = document.getElementById('edit-modal-fields');
-  const titles = { friday: 'Edit event', saturday: 'Edit event', darts: 'Edit challenge', tips: 'Edit tip' };
+  const titles = { friday: 'Edit event', saturday: 'Edit event', darts: 'Edit challenge', tips: 'Edit tip', bull: 'Edit mitten' };
   document.getElementById('edit-modal-title').textContent = titles[list] || 'Edit';
 
   let item;
@@ -555,11 +596,16 @@ function openEdit(list, id) {
   else if (list === 'saturday') item = saturday.find(x => x.id === id);
   else if (list === 'darts') item = darts.find(x => x.id === id);
   else if (list === 'tips') item = tips.find(x => x.id === id);
+  else if (list === 'bull') item = bull.find(x => x.id === id);
 
   if (list === 'darts') {
     fields.innerHTML = `
-      <div class="form-field"><label>Name</label><input id="ef-name" value="${item.name}"></div>
-      <div class="form-field"><label>Description</label><textarea id="ef-desc" rows="2">${item.desc}</textarea></div>`;
+      <div class="form-row">
+        <div class="form-field" style="max-width:80px"><label>Från (min)</label><input id="ef-min" type="number" min="0" max="180" value="${item.min ?? 0}"></div>
+        <div class="form-field" style="max-width:80px"><label>Till (max)</label><input id="ef-max" type="number" min="0" max="180" value="${item.max ?? 0}"></div>
+        <div class="form-field"><label>Namn</label><input id="ef-name" value="${item.name}"></div>
+      </div>
+      <div class="form-field"><label>Beskrivning</label><textarea id="ef-desc" rows="2">${item.desc}</textarea></div>`;
   } else if (list === 'friday' || list === 'saturday') {
     const colors = ['hl','tr','br','rd','pu','pk'];
     const colorNames = { hl:'Gold', tr:'Blue', br:'Green', rd:'Coral', pu:'Purple', pk:'Pink' };
@@ -586,6 +632,9 @@ function openEdit(list, id) {
         <div class="form-field"><label>Område</label><input id="ef-area" value="${item.area||''}"></div>
       </div>
       <div class="form-field"><label>Anteckning</label><textarea id="ef-desc" rows="2">${item.note||''}</textarea></div>`;
+  } else if (list === 'bull') {
+    fields.innerHTML = `
+      <div class="form-field"><label>${item.title}</label><textarea id="ef-desc" rows="3" placeholder="Beskriv vad som händer...">${item.desc || ''}</textarea></div>`;
   } else {
     fields.innerHTML = `
       <div class="form-row">
@@ -612,9 +661,10 @@ function saveEdit() {
   function patch(arr) {
     return arr.map(x => {
       if (x.id !== id) return x;
-      if (list === 'darts') return { ...x, name: get('ef-name') || x.name, desc: get('ef-desc') };
+      if (list === 'darts') return { ...x, min: parseInt(get('ef-min')) || x.min, max: parseInt(get('ef-max')) || x.max, name: get('ef-name') || x.name, desc: get('ef-desc') };
       if (list === 'friday' || list === 'saturday') return { ...x, time: get('ef-time') || x.time, emoji: get('ef-emoji') || x.emoji, title: get('ef-title') || x.title, color: get('ef-color') || x.color };
       if (list === 'tips') return { ...x, emoji: get('ef-emoji') || x.emoji, name: get('ef-title') || x.name, cat: get('ef-cat') || x.cat, area: get('ef-area'), note: get('ef-desc') };
+      if (list === 'bull') return { ...x, desc: get('ef-desc') };
       return { ...x, time: get('ef-time') || x.time, title: get('ef-title') || x.title, desc: get('ef-desc') };
     });
   }
@@ -623,6 +673,7 @@ function saveEdit() {
   else if (list === 'saturday') { saturday = patch(saturday); renderEvents('saturday'); }
   else if (list === 'darts') { darts = patch(darts); renderDarts(); }
   else if (list === 'tips') { tips = patch(tips); renderTips(); }
+  else if (list === 'bull') { bull = patch(bull); renderBull(); }
 
   closeEdit();
   saveToCloud();
@@ -663,28 +714,31 @@ const DEFAULT_DATA = {
     { id:5, time:'20:30', emoji:'🍽️', title:'IKIGAI', color:'pk' }
   ],
   darts: [
-    { id:1,  name:'Drick upp',           desc:'Ta slut på ditt nuvarande glas.' },
-    { id:2,  name:'Roasta mig',          desc:'Alla säger en pinsam sak om brudgummen. 20 sek var.' },
-    { id:3,  name:'Telefon-roulette',    desc:'Gruppen väljer en kontakt. Han skickar ett röstmeddelande.' },
-    { id:4,  name:'Nästa runda på dig',  desc:'Brudgummen bjuder nästa runda på alla.' },
-    { id:5,  name:'Sanningsbomb',        desc:'Gruppen ställer en fråga. Måste svara ärligt inför alla.' },
-    { id:6,  name:'Kostym på',           desc:'Han tar på sig ett nytt plagg tills nästa kast.' },
-    { id:7,  name:'Bästisens val',       desc:'Bäste mannen bestämmer fritt. Inga överklaganden.' },
-    { id:8,  name:'Alla tar en shot',    desc:'Hela gänget tar en shot. Inga undantag.' },
-    { id:9,  name:'Kissa-timer',         desc:'Nästa gång han behöver på toaletten frågar han om lov högt.' },
-    { id:10, name:'Grupptag',            desc:'Gruppen röstar fram en utmaning alla gör tillsammans.' },
-    { id:11, name:'Foto-uppdrag',        desc:'Gruppen pekar ut en okänd. Han tar ett gemensamt foto.' },
-    { id:12, name:'Bygg en historia',    desc:'Alla berättar en mening var om brudgummen, runt bordet.' },
-    { id:13, name:'Otur — drick dubbelt',desc:'Han dricker dubbelt så mycket som alla andra just nu.' },
-    { id:14, name:'Serenaden',           desc:'Han sjunger 30 sek av en låt gruppen väljer.' },
-    { id:15, name:'Tummen ner',          desc:'Siste person att lägga tummen på bordet dricker.' },
-    { id:16, name:'Vild-kort',           desc:'Gruppen röstar fram valfri utmaning. Majoriteten vinner.' },
-    { id:17, name:'Livets lågpunkt',     desc:'Han berättar sin mest pinsamma historia från de senaste 5 åren.' },
-    { id:18, name:'Byt dryck',           desc:'Han och personen till höger byter glas i 10 minuter.' },
-    { id:19, name:'Högtalaruppdrag',     desc:'Ber en okänd person önska brudgummen lycka till inför bröllopet.' },
-    { id:20, name:'Frikort',             desc:'Tur! Sparar ett frikort att använda mot valfri utmaning senare.' }
+    { id:1,  min:0,   max:9,   name:'', desc:'' },
+    { id:2,  min:10,  max:19,  name:'', desc:'' },
+    { id:3,  min:20,  max:29,  name:'', desc:'' },
+    { id:4,  min:30,  max:39,  name:'', desc:'' },
+    { id:5,  min:40,  max:49,  name:'', desc:'' },
+    { id:6,  min:50,  max:59,  name:'', desc:'' },
+    { id:7,  min:60,  max:69,  name:'', desc:'' },
+    { id:8,  min:70,  max:79,  name:'', desc:'' },
+    { id:9,  min:80,  max:89,  name:'', desc:'' },
+    { id:10, min:90,  max:99,  name:'', desc:'' },
+    { id:11, min:100, max:109, name:'', desc:'' },
+    { id:12, min:110, max:119, name:'', desc:'' },
+    { id:13, min:120, max:129, name:'', desc:'' },
+    { id:14, min:130, max:139, name:'', desc:'' },
+    { id:15, min:140, max:149, name:'', desc:'' },
+    { id:16, min:150, max:159, name:'', desc:'' },
+    { id:17, min:160, max:169, name:'', desc:'' },
+    { id:18, min:170, max:179, name:'', desc:'' },
+    { id:19, min:180, max:180, name:'', desc:'' }
   ],
-  tips: []
+  tips: [],
+  bull: [
+    { id:'bull-outer', title:'Bull — 25p', sub:'Yttre ringen', desc:'' },
+    { id:'bull-inner', title:'Bullseye — 50p', sub:'Innersta punkten', desc:'' }
+  ]
 };
 
 const CACHE_KEY = 'kbh_cache';
@@ -701,10 +755,12 @@ function applyData(d) {
   saturday = d.saturday && d.saturday.length ? d.saturday : DEFAULT_DATA.saturday;
   darts    = d.darts    && d.darts.length    ? d.darts    : DEFAULT_DATA.darts;
   tips     = d.tips     ? d.tips             : DEFAULT_DATA.tips;
+  bull     = d.bull     && d.bull.length     ? d.bull     : DEFAULT_DATA.bull;
   renderEvents('friday');
   renderEvents('saturday');
   renderDarts();
   renderTips();
+  renderBull();
 }
 
 const cached = loadCache();
