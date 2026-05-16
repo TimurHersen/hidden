@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Köln! 🗓️</title>
+<title>KBH 🗓️</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0e0e0e; --bg2: #161616; --bg3: #1e1e1e;
-    --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
-    --text: #f0ede8; --text2: #9e9b96; --text3: #5a5855;
+    --bg: #0d0a08; --bg2: #161210; --bg3: #201916;
+    --border: rgba(255,235,200,0.07); --border2: rgba(255,235,200,0.13);
+    --text: #f5f0e8; --text2: #9e9890; --text3: #5c5248;
     --amber: #EF9F27; --amber-dim: rgba(239,159,39,0.12); --amber-border: rgba(239,159,39,0.3);
     --green: #1D9E75; --green-dim: rgba(29,158,117,0.12);
     --purple: #7F77DD; --purple-dim: rgba(127,119,221,0.12);
@@ -20,24 +20,35 @@
   }
   html, body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: 'Georgia', 'Times New Roman', serif; }
 
-  .header { padding: 32px 20px 0; max-width: 600px; margin: 0 auto; }
-  .header-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
-  .header h1 { font-size: 28px; font-weight: normal; letter-spacing: -0.5px; color: var(--text); }
-  .header-sub { font-size: 13px; color: var(--text3); font-family: 'Courier New', monospace; }
+  /* ── Vignette ── */
+  body::after { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 50% 40%, transparent 45%, rgba(0,0,0,0.55) 100%); pointer-events: none; z-index: 0; }
 
-  .tabs { max-width: 600px; margin: 0 auto; padding: 24px 20px 0; }
+  /* ── Background art ── */
+  .bg-art { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .bg-art svg { position: absolute; }
+
+  /* ── Header ── */
+  .header { padding: 52px 20px 0; max-width: 600px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
+  .header-eyebrow { font-size: 10px; font-family: 'Courier New', monospace; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text3); margin-bottom: 14px; }
+  .header h1 { font-size: 68px; font-weight: normal; letter-spacing: 10px; color: var(--text); line-height: 1; margin-bottom: 18px; text-indent: 10px; }
+  .header-rule { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
+  .header-rule span { flex: 1; height: 1px; background: var(--border2); max-width: 70px; }
+  .header-gem { font-size: 7px; color: var(--amber); flex: none !important; letter-spacing: 4px; }
+  .header-sub { font-size: 11px; color: var(--text3); font-family: 'Courier New', monospace; letter-spacing: 0.1em; }
+
+  .tabs { max-width: 600px; margin: 0 auto; padding: 28px 20px 0; position: relative; z-index: 1; }
   .tab-bar { display: flex; gap: 2px; border-bottom: 1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .tab-bar::-webkit-scrollbar { display: none; }
-  .tab-btn { background: none; border: none; color: var(--text3); font-size: 13px; font-family: 'Courier New', monospace; letter-spacing: 0.04em; padding: 10px 16px 12px; cursor: pointer; position: relative; transition: color 0.2s; white-space: nowrap; flex-shrink: 0; }
+  .tab-btn { background: none; border: none; color: var(--text3); font-size: 12px; font-family: 'Courier New', monospace; letter-spacing: 0.08em; padding: 10px 18px 12px; cursor: pointer; position: relative; transition: color 0.2s; white-space: nowrap; flex-shrink: 0; text-transform: uppercase; }
   .tab-btn:hover { color: var(--text2); }
   .tab-btn.active { color: var(--amber); }
-  .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--amber); border-radius: 2px 2px 0 0; }
+  .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 1px; background: var(--amber); }
 
   @media (hover: none) {
     .deletable .del-btn, .deletable .edit-btn { display: flex; }
   }
 
-  .panels { max-width: 600px; margin: 0 auto; padding: 0 20px 60px; }
+  .panels { max-width: 600px; margin: 0 auto; padding: 0 20px 80px; position: relative; z-index: 1; }
   .panel { display: none; padding-top: 28px; }
   .panel.active { display: block; animation: fadein 0.2s ease; }
   @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -157,7 +168,6 @@
   .tbd p { font-size: 12px; font-family: 'Courier New', monospace; color: var(--text3); }
   .tbd p + p { margin-top: 4px; font-size: 11px; }
 
-  /* ── Tips/Önskemål ── */
   .tips-cats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
   .tips-cat-btn { background: none; border: 1px solid var(--border2); border-radius: 20px; color: var(--text3); font-size: 11px; font-family: 'Courier New', monospace; padding: 4px 12px; cursor: pointer; transition: all 0.15s; }
   .tips-cat-btn:hover { color: var(--text2); border-color: rgba(255,255,255,0.22); }
@@ -184,12 +194,122 @@
 </head>
 <body>
 
+<div class="bg-art" aria-hidden="true">
+  <!-- Bike to Köln — top right -->
+  <svg viewBox="0 0 140 155" xmlns="http://www.w3.org/2000/svg" style="right:-30px;top:40px;opacity:.09;transform:rotate(6deg);width:220px;height:244px">
+    <polygon points="98,155 94,45 102,45" fill="#EF9F27"/>
+    <polygon points="116,155 112,58 120,58" fill="#EF9F27"/>
+    <rect x="90" y="100" width="34" height="55" fill="#EF9F27"/>
+    <rect x="88" y="88" width="36" height="14" fill="#EF9F27"/>
+    <circle cx="40" cy="118" r="17" fill="none" stroke="#EF9F27" stroke-width="2.5"/>
+    <circle cx="85" cy="118" r="17" fill="none" stroke="#EF9F27" stroke-width="2.5"/>
+    <polyline points="40,118 60,96 85,118" fill="none" stroke="#f5f0e8" stroke-width="2"/>
+    <line x1="60" y1="96" x2="40" y2="118" stroke="#f5f0e8" stroke-width="1.5"/>
+    <line x1="52" y1="96" x2="50" y2="85" stroke="#f5f0e8" stroke-width="2"/>
+    <line x1="44" y1="85" x2="57" y2="85" stroke="#f5f0e8" stroke-width="3" stroke-linecap="round"/>
+    <line x1="60" y1="96" x2="63" y2="85" stroke="#f5f0e8" stroke-width="2"/>
+    <line x1="58" y1="85" x2="68" y2="85" stroke="#f5f0e8" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="50" y1="85" x2="60" y2="73" stroke="#f5f0e8" stroke-width="3" stroke-linecap="round"/>
+    <line x1="60" y1="73" x2="63" y2="85" stroke="#f5f0e8" stroke-width="2" stroke-linecap="round"/>
+    <line x1="50" y1="85" x2="42" y2="108" stroke="#f5f0e8" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="50" y1="85" x2="58" y2="108" stroke="#f5f0e8" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="63" cy="67" r="9" fill="#f5f0e8"/>
+    <circle cx="57" cy="62" r="5.5" fill="#EF9F27"/>
+    <circle cx="62" cy="59" r="5.5" fill="#EF9F27"/>
+    <circle cx="68" cy="61" r="5.5" fill="#EF9F27"/>
+    <circle cx="56" cy="67" r="4" fill="#EF9F27"/>
+    <circle cx="70" cy="66" r="4" fill="#EF9F27"/>
+    <line x1="4" y1="112" x2="20" y2="112" stroke="#EF9F27" stroke-width="2" stroke-linecap="round"/>
+    <line x1="2" y1="120" x2="18" y2="120" stroke="#EF9F27" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+  <!-- Cathedral — bottom left -->
+  <svg viewBox="0 0 140 155" xmlns="http://www.w3.org/2000/svg" style="left:-40px;bottom:60px;opacity:.07;transform:rotate(-5deg);width:210px;height:232px">
+    <rect x="38" y="95" width="64" height="60" fill="#f5f0e8"/>
+    <polygon points="38,95 70,75 102,95" fill="#f5f0e8"/>
+    <circle cx="70" cy="88" r="7" fill="#EF9F27" opacity=".5"/>
+    <rect x="36" y="55" width="22" height="62" fill="#f5f0e8"/>
+    <polygon points="30,55 47,4 64,55" fill="#f5f0e8"/>
+    <rect x="82" y="55" width="22" height="62" fill="#f5f0e8"/>
+    <polygon points="76,55 93,4 110,55" fill="#f5f0e8"/>
+    <rect x="42" y="65" width="8" height="14" rx="4" fill="#0d0a08"/>
+    <rect x="88" y="65" width="8" height="14" rx="4" fill="#0d0a08"/>
+    <rect x="47" y="105" width="8" height="14" rx="4" fill="#0d0a08"/>
+    <rect x="62" y="105" width="8" height="14" rx="4" fill="#0d0a08"/>
+    <rect x="77" y="105" width="8" height="14" rx="4" fill="#0d0a08"/>
+    <rect x="92" y="105" width="8" height="14" rx="4" fill="#0d0a08"/>
+  </svg>
+  <!-- Beer glasses — mid right -->
+  <svg viewBox="0 0 140 155" xmlns="http://www.w3.org/2000/svg" style="right:-15px;top:42%;opacity:.07;transform:rotate(-14deg);width:160px;height:177px">
+    <g transform="rotate(-8,35,110)">
+      <rect x="25" y="60" width="20" height="82" rx="2" fill="none" stroke="#EF9F27" stroke-width="2"/>
+      <rect x="26" y="60" width="18" height="10" rx="1" fill="#f5f0e8" opacity=".6"/>
+      <rect x="26" y="70" width="18" height="72" rx="1" fill="#EF9F27" opacity=".5"/>
+    </g>
+    <rect x="60" y="48" width="20" height="95" rx="2" fill="none" stroke="#EF9F27" stroke-width="2"/>
+    <rect x="61" y="48" width="18" height="11" rx="1" fill="#f5f0e8" opacity=".6"/>
+    <rect x="61" y="59" width="18" height="84" rx="1" fill="#EF9F27" opacity=".5"/>
+    <g transform="rotate(8,105,110)">
+      <rect x="95" y="60" width="20" height="82" rx="2" fill="none" stroke="#EF9F27" stroke-width="2"/>
+      <rect x="96" y="60" width="18" height="10" rx="1" fill="#f5f0e8" opacity=".6"/>
+      <rect x="96" y="70" width="18" height="72" rx="1" fill="#EF9F27" opacity=".5"/>
+    </g>
+    <circle cx="70" cy="44" r="3" fill="#EF9F27"/>
+    <line x1="70" y1="36" x2="70" y2="41" stroke="#EF9F27" stroke-width="2" stroke-linecap="round"/>
+    <line x1="62" y1="44" x2="67" y2="44" stroke="#EF9F27" stroke-width="2" stroke-linecap="round"/>
+    <line x1="73" y1="44" x2="78" y2="44" stroke="#EF9F27" stroke-width="2" stroke-linecap="round"/>
+  </svg>
+  <!-- Axe target — top left -->
+  <svg viewBox="0 0 140 155" xmlns="http://www.w3.org/2000/svg" style="left:-20px;top:220px;opacity:.07;transform:rotate(18deg);width:155px;height:172px">
+    <circle cx="70" cy="90" r="55" fill="none" stroke="#f5f0e8" stroke-width="1.5"/>
+    <circle cx="70" cy="90" r="44" fill="none" stroke="#f5f0e8" stroke-width="1.5"/>
+    <circle cx="70" cy="90" r="33" fill="none" stroke="#f5f0e8" stroke-width="1.5"/>
+    <circle cx="70" cy="90" r="22" fill="none" stroke="#f5f0e8" stroke-width="1.5"/>
+    <circle cx="70" cy="90" r="11" fill="#EF9F27" opacity=".6"/>
+    <circle cx="70" cy="90" r="5" fill="#f5f0e8" opacity=".8"/>
+    <line x1="70" y1="35" x2="70" y2="145" stroke="#f5f0e8" stroke-width="1" opacity=".3"/>
+    <line x1="15" y1="90" x2="125" y2="90" stroke="#f5f0e8" stroke-width="1" opacity=".3"/>
+    <path d="M80,54 L99,43 L103,32 L85,41 Z" fill="#f5f0e8"/>
+    <rect x="89" y="22" width="6" height="46" rx="3" fill="#EF9F27" transform="rotate(25,92,45)"/>
+  </svg>
+  <!-- Friends — bottom right -->
+  <svg viewBox="0 0 140 155" xmlns="http://www.w3.org/2000/svg" style="right:-25px;bottom:20px;opacity:.07;transform:rotate(-4deg);width:200px;height:221px">
+    <circle cx="15" cy="88" r="8" fill="#f5f0e8"/><ellipse cx="15" cy="82" rx="8" ry="4" fill="#EF9F27"/>
+    <rect x="7" y="96" width="16" height="18" rx="3" fill="#f5f0e8" opacity=".6"/>
+    <line x1="23" y1="100" x2="30" y2="91" stroke="#f5f0e8" stroke-width="3" stroke-linecap="round"/>
+    <rect x="28" y="83" width="5" height="10" rx="1" fill="#EF9F27"/>
+    <circle cx="38" cy="84" r="8" fill="#f5f0e8"/><ellipse cx="38" cy="78" rx="9" ry="5" fill="#EF9F27"/>
+    <rect x="30" y="92" width="16" height="18" rx="3" fill="#f5f0e8" opacity=".6"/>
+    <line x1="46" y1="96" x2="53" y2="87" stroke="#f5f0e8" stroke-width="3" stroke-linecap="round"/>
+    <rect x="51" y="79" width="5" height="10" rx="1" fill="#EF9F27"/>
+    <!-- Ludvig centre — big curly hair -->
+    <circle cx="70" cy="82" r="9" fill="#f5f0e8"/>
+    <circle cx="63" cy="76" r="6" fill="#EF9F27"/><circle cx="69" cy="73" r="6" fill="#EF9F27"/>
+    <circle cx="75" cy="76" r="6" fill="#EF9F27"/><circle cx="61" cy="81" r="5" fill="#EF9F27"/>
+    <circle cx="77" cy="81" r="5" fill="#EF9F27"/>
+    <rect x="61" y="91" width="18" height="18" rx="3" fill="#f5f0e8" opacity=".7"/>
+    <line x1="61" y1="95" x2="52" y2="84" stroke="#f5f0e8" stroke-width="3" stroke-linecap="round"/>
+    <rect x="44" y="76" width="5" height="10" rx="1" fill="#EF9F27"/>
+    <circle cx="102" cy="84" r="8" fill="#f5f0e8"/><ellipse cx="102" cy="78" rx="8" ry="4" fill="#EF9F27"/>
+    <rect x="94" y="92" width="16" height="18" rx="3" fill="#f5f0e8" opacity=".6"/>
+    <line x1="94" y1="96" x2="87" y2="87" stroke="#f5f0e8" stroke-width="3" stroke-linecap="round"/>
+    <rect x="80" y="79" width="5" height="10" rx="1" fill="#EF9F27"/>
+    <circle cx="125" cy="88" r="8" fill="#f5f0e8"/><ellipse cx="125" cy="82" rx="8" ry="4" fill="#EF9F27"/>
+    <rect x="117" y="96" width="16" height="18" rx="3" fill="#f5f0e8" opacity=".6"/>
+    <line x1="117" y1="100" x2="110" y2="91" stroke="#f5f0e8" stroke-width="3" stroke-linecap="round"/>
+    <rect x="103" y="83" width="5" height="10" rx="1" fill="#EF9F27"/>
+  </svg>
+</div>
+
 <div class="header">
-  <div class="header-top">
-    <h1>KBH</h1>
-    <span id="save-status" style="margin-left:auto;font-size:11px;font-family:'Courier New',monospace;color:var(--text3);opacity:0;transition:opacity 0.4s;"></span>
+  <p class="header-eyebrow">Svensexa · Köln · 2026</p>
+  <h1>KBH</h1>
+  <div class="header-rule">
+    <span></span>
+    <span class="header-gem">◆ ◆ ◆</span>
+    <span></span>
   </div>
-  <p class="header-sub">Stockholm → Köln &nbsp;·&nbsp; 2026</p>
+  <p class="header-sub">Stockholm → Köln</p>
+  <span id="save-status" style="display:block;margin-top:8px;font-size:11px;font-family:'Courier New',monospace;color:var(--text3);opacity:0;transition:opacity 0.4s;"></span>
 </div>
 
 <div class="tabs">
@@ -741,7 +861,7 @@ const DEFAULT_DATA = {
   ]
 };
 
-const CACHE_KEY = 'kbh_cache';
+const CACHE_KEY = 'kbh_cache_v2';
 
 function loadCache() {
   try { const v = localStorage.getItem(CACHE_KEY); return v ? JSON.parse(v) : null; } catch(e) { return null; }
@@ -753,7 +873,7 @@ function writeCache(data) {
 function applyData(d) {
   friday   = d.friday   && d.friday.length   ? d.friday   : DEFAULT_DATA.friday;
   saturday = d.saturday && d.saturday.length ? d.saturday : DEFAULT_DATA.saturday;
-  darts    = d.darts    && d.darts.length    ? d.darts    : DEFAULT_DATA.darts;
+  darts    = d.darts && d.darts.length && d.darts[0].min !== undefined ? d.darts : DEFAULT_DATA.darts;
   tips     = d.tips     ? d.tips             : DEFAULT_DATA.tips;
   bull     = d.bull     && d.bull.length     ? d.bull     : DEFAULT_DATA.bull;
   renderEvents('friday');
