@@ -64,7 +64,7 @@
     content: '';
     position: fixed;
     inset: 0;
-    background-image: radial-gradient(circle, rgba(10,26,51,0.12) 1.5px, transparent 1.5px);
+    background-image: radial-gradient(circle, rgba(10,26,51,0.08) 1.5px, transparent 1.5px);
     background-size: 22px 22px;
     pointer-events: none;
     z-index: 0;
@@ -713,9 +713,41 @@
   }
 
   @media (max-width: 480px) {
-    .header h1 { font-size: 44px; }
-    .day-label { font-size: 22px; }
+    .header { padding: 40px 16px 0; }
+    .header h1 {
+      font-size: 44px;
+      letter-spacing: 2px;
+      -webkit-text-stroke: 2.5px var(--ink);
+      text-stroke: 2.5px var(--ink);
+      text-shadow: 4px 4px 0 var(--ink);
+    }
+    .header-eyebrow { font-size: 9px; padding: 6px 12px; }
+    .header-sub { font-size: 10px; }
+    .tabs { padding: 22px 14px 0; }
+    .tab-btn { padding: 8px 14px; font-size: 12px; }
+    .panels { padding: 0 14px 80px; }
+    .day-label { font-size: 22px; padding: 5px 14px; }
+    .sec-label { font-size: 10px; padding: 4px 10px; }
+    .tb { min-width: 46px; font-size: 11px; padding: 5px 6px; }
+    .card { padding: 10px 12px; }
+    .ct { font-size: 14px; }
+    .ci { font-size: 18px; }
     .bull-row { grid-template-columns: 1fr; }
+    .dart-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+    .tips-cats { gap: 6px; }
+    .tips-cat-btn { font-size: 10px; padding: 4px 10px; }
+    .tip-card { padding: 12px; gap: 10px; }
+    .tip-icon { font-size: 20px; width: 38px; height: 38px; }
+    .form-row { gap: 8px; }
+    .add-form { padding: 12px; }
+    .modal { padding: 16px; }
+    .modal-title { font-size: 18px; }
+    body::before { background-size: 18px 18px; }
+  }
+  @media (max-width: 360px) {
+    .header h1 { font-size: 38px; letter-spacing: 1px; }
+    .prog-tl { padding-left: 22px; }
+    .ev::before { left: -24px; width: 14px; height: 14px; }
   }
 </style>
 </head>
@@ -725,7 +757,7 @@
 <div class="bg-art" aria-hidden="true">
 
   <!-- Bike to Köln — top right -->
-  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="right:-30px;top:40px;opacity:.22;transform:rotate(6deg);width:230px;height:230px">
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="right:-4vw;top:40px;opacity:.55;transform:rotate(6deg);width:min(230px,46vw);height:min(230px,46vw)">
     <!-- Speed lines (behind everything) -->
     <g stroke="#0A1A33" stroke-width="4" stroke-linecap="round">
       <line x1="0" y1="118" x2="22" y2="118"/>
@@ -750,12 +782,12 @@
     <circle cx="55" cy="150" r="6" fill="#0A1A33"/>
     <circle cx="155" cy="150" r="6" fill="#0A1A33"/>
     <!-- Frame (chunky diamond) -->
-    <line x1="55" y1="150" x2="100" y2="135" stroke="#2C7DD1" stroke-width="10" stroke-linecap="round"/>
-    <line x1="55" y1="150" x2="95" y2="78" stroke="#2C7DD1" stroke-width="10" stroke-linecap="round"/>
-    <line x1="100" y1="135" x2="95" y2="78" stroke="#2C7DD1" stroke-width="10" stroke-linecap="round"/>
-    <line x1="100" y1="135" x2="138" y2="80" stroke="#2C7DD1" stroke-width="10" stroke-linecap="round"/>
-    <line x1="95" y1="78" x2="138" y2="80" stroke="#2C7DD1" stroke-width="10" stroke-linecap="round"/>
-    <line x1="138" y1="80" x2="155" y2="150" stroke="#2C7DD1" stroke-width="10" stroke-linecap="round"/>
+    <line x1="55" y1="150" x2="100" y2="135" stroke="#FF7A4D" stroke-width="10" stroke-linecap="round"/>
+    <line x1="55" y1="150" x2="95" y2="78" stroke="#FF7A4D" stroke-width="10" stroke-linecap="round"/>
+    <line x1="100" y1="135" x2="95" y2="78" stroke="#FF7A4D" stroke-width="10" stroke-linecap="round"/>
+    <line x1="100" y1="135" x2="138" y2="80" stroke="#FF7A4D" stroke-width="10" stroke-linecap="round"/>
+    <line x1="95" y1="78" x2="138" y2="80" stroke="#FF7A4D" stroke-width="10" stroke-linecap="round"/>
+    <line x1="138" y1="80" x2="155" y2="150" stroke="#FF7A4D" stroke-width="10" stroke-linecap="round"/>
     <!-- Seat post + saddle -->
     <line x1="95" y1="78" x2="95" y2="60" stroke="#0A1A33" stroke-width="5" stroke-linecap="round"/>
     <ellipse cx="95" cy="56" rx="14" ry="5" fill="#0A1A33"/>
@@ -763,31 +795,31 @@
     <line x1="138" y1="80" x2="142" y2="52" stroke="#0A1A33" stroke-width="5" stroke-linecap="round"/>
     <line x1="126" y1="50" x2="156" y2="50" stroke="#0A1A33" stroke-width="6" stroke-linecap="round"/>
     <!-- Grips -->
-    <circle cx="126" cy="50" r="4" fill="#FFD24A" stroke="#0A1A33" stroke-width="2.5"/>
-    <circle cx="156" cy="50" r="4" fill="#FFD24A" stroke="#0A1A33" stroke-width="2.5"/>
+    <circle cx="126" cy="50" r="4" fill="#4FB8E6" stroke="#0A1A33" stroke-width="2.5"/>
+    <circle cx="156" cy="50" r="4" fill="#4FB8E6" stroke="#0A1A33" stroke-width="2.5"/>
     <!-- Pedal crank + pedals -->
     <circle cx="100" cy="135" r="6" fill="#0A1A33"/>
     <line x1="100" y1="135" x2="88" y2="148" stroke="#0A1A33" stroke-width="4" stroke-linecap="round"/>
     <line x1="100" y1="135" x2="112" y2="122" stroke="#0A1A33" stroke-width="4" stroke-linecap="round"/>
-    <rect x="82" y="146" width="14" height="5" rx="2" fill="#FFD24A" stroke="#0A1A33" stroke-width="2"/>
-    <rect x="106" y="118" width="14" height="5" rx="2" fill="#FFD24A" stroke="#0A1A33" stroke-width="2"/>
+    <rect x="82" y="146" width="14" height="5" rx="2" fill="#FFC93C" stroke="#0A1A33" stroke-width="2"/>
+    <rect x="106" y="118" width="14" height="5" rx="2" fill="#FFC93C" stroke="#0A1A33" stroke-width="2"/>
   </svg>
 
   <!-- Cathedral — bottom left -->
-  <svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" style="left:-40px;bottom:60px;opacity:.20;transform:rotate(-5deg);width:220px;height:240px">
+  <svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" style="left:-6vw;bottom:60px;opacity:.55;transform:rotate(-5deg);width:min(220px,46vw);height:min(240px,50vw)">
     <!-- Main body -->
-    <rect x="55" y="120" width="90" height="95" fill="#FFF8E8" stroke="#0A1A33" stroke-width="5"/>
+    <rect x="55" y="120" width="90" height="95" fill="#FFF1D6" stroke="#0A1A33" stroke-width="5"/>
     <!-- Rose window -->
-    <circle cx="100" cy="150" r="14" fill="#FFD24A" stroke="#0A1A33" stroke-width="4"/>
+    <circle cx="100" cy="150" r="14" fill="#FFC93C" stroke="#0A1A33" stroke-width="4"/>
     <line x1="100" y1="136" x2="100" y2="164" stroke="#0A1A33" stroke-width="3"/>
     <line x1="86" y1="150" x2="114" y2="150" stroke="#0A1A33" stroke-width="3"/>
     <!-- Left spire -->
-    <rect x="35" y="80" width="35" height="120" fill="#FFF8E8" stroke="#0A1A33" stroke-width="5"/>
-    <polygon points="32,80 52,12 72,80" fill="#6BB0F0" stroke="#0A1A33" stroke-width="5" stroke-linejoin="round"/>
+    <rect x="35" y="80" width="35" height="120" fill="#FFF1D6" stroke="#0A1A33" stroke-width="5"/>
+    <polygon points="32,80 52,12 72,80" fill="#4FB8E6" stroke="#0A1A33" stroke-width="5" stroke-linejoin="round"/>
     <circle cx="52" cy="14" r="4" fill="#0A1A33"/>
     <!-- Right spire -->
-    <rect x="130" y="80" width="35" height="120" fill="#FFF8E8" stroke="#0A1A33" stroke-width="5"/>
-    <polygon points="128,80 148,12 168,80" fill="#6BB0F0" stroke="#0A1A33" stroke-width="5" stroke-linejoin="round"/>
+    <rect x="130" y="80" width="35" height="120" fill="#FFF1D6" stroke="#0A1A33" stroke-width="5"/>
+    <polygon points="128,80 148,12 168,80" fill="#4FB8E6" stroke="#0A1A33" stroke-width="5" stroke-linejoin="round"/>
     <circle cx="148" cy="14" r="4" fill="#0A1A33"/>
     <!-- Spire windows -->
     <rect x="44" y="96" width="9" height="20" rx="4.5" fill="#0A1A33"/>
@@ -801,7 +833,7 @@
   </svg>
 
   <!-- Beer mugs — mid right -->
-  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="right:-20px;top:42%;opacity:.20;transform:rotate(-14deg);width:170px;height:170px">
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="right:-3vw;top:42%;opacity:.55;transform:rotate(-14deg);width:min(170px,38vw);height:min(170px,38vw)">
     <!-- Splash sparkles at top center (where they clink) -->
     <g stroke="#0A1A33" stroke-width="3.5" stroke-linecap="round">
       <line x1="100" y1="22" x2="100" y2="38"/>
@@ -813,102 +845,102 @@
     <!-- Left mug (tilted right, cheering) -->
     <g transform="rotate(-12, 55, 110)">
       <!-- Body -->
-      <rect x="35" y="68" width="42" height="92" rx="6" fill="#FFD24A" stroke="#0A1A33" stroke-width="5"/>
+      <rect x="35" y="68" width="42" height="92" rx="6" fill="#FFC93C" stroke="#0A1A33" stroke-width="5"/>
       <!-- Wobbly foam top -->
-      <path d="M 35 74 Q 40 56 48 68 Q 56 52 64 68 Q 72 56 77 74 L 77 80 L 35 80 Z" fill="#FFF8E8" stroke="#0A1A33" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M 35 74 Q 40 56 48 68 Q 56 52 64 68 Q 72 56 77 74 L 77 80 L 35 80 Z" fill="#FFF1D6" stroke="#0A1A33" stroke-width="4" stroke-linejoin="round"/>
       <!-- Big rounded handle on the outside (left) -->
       <path d="M 35 92 Q 14 92 14 122 Q 14 142 35 142" fill="none" stroke="#0A1A33" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
       <!-- Bubbles -->
-      <circle cx="50" cy="100" r="3" fill="#FFF8E8"/>
-      <circle cx="63" cy="115" r="2.5" fill="#FFF8E8"/>
-      <circle cx="52" cy="135" r="2" fill="#FFF8E8"/>
-      <circle cx="65" cy="142" r="2" fill="#FFF8E8"/>
+      <circle cx="50" cy="100" r="3" fill="#FFF1D6"/>
+      <circle cx="63" cy="115" r="2.5" fill="#FFF1D6"/>
+      <circle cx="52" cy="135" r="2" fill="#FFF1D6"/>
+      <circle cx="65" cy="142" r="2" fill="#FFF1D6"/>
     </g>
     <!-- Right mug (tilted left, cheering) -->
     <g transform="rotate(12, 145, 110)">
-      <rect x="123" y="68" width="42" height="92" rx="6" fill="#FFD24A" stroke="#0A1A33" stroke-width="5"/>
-      <path d="M 123 74 Q 128 56 136 68 Q 144 52 152 68 Q 160 56 165 74 L 165 80 L 123 80 Z" fill="#FFF8E8" stroke="#0A1A33" stroke-width="4" stroke-linejoin="round"/>
+      <rect x="123" y="68" width="42" height="92" rx="6" fill="#FFC93C" stroke="#0A1A33" stroke-width="5"/>
+      <path d="M 123 74 Q 128 56 136 68 Q 144 52 152 68 Q 160 56 165 74 L 165 80 L 123 80 Z" fill="#FFF1D6" stroke="#0A1A33" stroke-width="4" stroke-linejoin="round"/>
       <!-- Handle on the outside (right) -->
       <path d="M 165 92 Q 186 92 186 122 Q 186 142 165 142" fill="none" stroke="#0A1A33" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
-      <circle cx="138" cy="100" r="3" fill="#FFF8E8"/>
-      <circle cx="151" cy="115" r="2.5" fill="#FFF8E8"/>
-      <circle cx="140" cy="135" r="2" fill="#FFF8E8"/>
-      <circle cx="153" cy="142" r="2" fill="#FFF8E8"/>
+      <circle cx="138" cy="100" r="3" fill="#FFF1D6"/>
+      <circle cx="151" cy="115" r="2.5" fill="#FFF1D6"/>
+      <circle cx="140" cy="135" r="2" fill="#FFF1D6"/>
+      <circle cx="153" cy="142" r="2" fill="#FFF1D6"/>
     </g>
   </svg>
 
   <!-- Axe target — top left -->
-  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="left:-25px;top:220px;opacity:.20;transform:rotate(15deg);width:170px;height:170px">
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="left:-4vw;top:220px;opacity:.55;transform:rotate(15deg);width:min(170px,38vw);height:min(170px,38vw)">
     <!-- Concentric rings, chunky -->
-    <circle cx="95" cy="100" r="82" fill="#FFF8E8" stroke="#0A1A33" stroke-width="5"/>
-    <circle cx="95" cy="100" r="64" fill="#C8E2F8" stroke="#0A1A33" stroke-width="4"/>
-    <circle cx="95" cy="100" r="48" fill="#FFF8E8" stroke="#0A1A33" stroke-width="4"/>
-    <circle cx="95" cy="100" r="32" fill="#6BB0F0" stroke="#0A1A33" stroke-width="4"/>
-    <circle cx="95" cy="100" r="16" fill="#FF9377" stroke="#0A1A33" stroke-width="4"/>
+    <circle cx="95" cy="100" r="82" fill="#FFF1D6" stroke="#0A1A33" stroke-width="5"/>
+    <circle cx="95" cy="100" r="64" fill="#4FB8E6" stroke="#0A1A33" stroke-width="4"/>
+    <circle cx="95" cy="100" r="48" fill="#FFC93C" stroke="#0A1A33" stroke-width="4"/>
+    <circle cx="95" cy="100" r="32" fill="#FF7A4D" stroke="#0A1A33" stroke-width="4"/>
+    <circle cx="95" cy="100" r="16" fill="#FFB3C7" stroke="#0A1A33" stroke-width="4"/>
     <circle cx="95" cy="100" r="5" fill="#0A1A33"/>
     <!-- Axe stuck in target -->
     <g transform="rotate(28, 145, 60)">
-      <rect x="138" y="35" width="9" height="80" rx="3" fill="#FFD24A" stroke="#0A1A33" stroke-width="4"/>
-      <path d="M 118 28 L 168 28 L 174 56 L 110 56 Z" fill="#FFF8E8" stroke="#0A1A33" stroke-width="4" stroke-linejoin="round"/>
+      <rect x="138" y="35" width="9" height="80" rx="3" fill="#FFC93C" stroke="#0A1A33" stroke-width="4"/>
+      <path d="M 118 28 L 168 28 L 174 56 L 110 56 Z" fill="#FFF1D6" stroke="#0A1A33" stroke-width="4" stroke-linejoin="round"/>
       <line x1="125" y1="38" x2="160" y2="38" stroke="#0A1A33" stroke-width="2" opacity="0.4"/>
     </g>
   </svg>
 
   <!-- Friends — bottom right (Ludvig in centre with curls + crown) -->
-  <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="right:-25px;bottom:20px;opacity:.21;transform:rotate(-4deg);width:230px;height:177px">
+  <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="right:-4vw;bottom:20px;opacity:.55;transform:rotate(-4deg);width:min(230px,52vw);height:min(177px,40vw)">
     <!-- Friend 1 (far left) -->
-    <rect x="14" y="115" width="26" height="40" rx="6" fill="#2C7DD1" stroke="#0A1A33" stroke-width="4"/>
-    <circle cx="27" cy="100" r="14" fill="#FFF8E8" stroke="#0A1A33" stroke-width="4"/>
+    <rect x="14" y="115" width="26" height="40" rx="6" fill="#4FB8E6" stroke="#0A1A33" stroke-width="4"/>
+    <circle cx="27" cy="100" r="14" fill="#FFF1D6" stroke="#0A1A33" stroke-width="4"/>
     <circle cx="22" cy="98" r="1.8" fill="#0A1A33"/>
     <circle cx="32" cy="98" r="1.8" fill="#0A1A33"/>
 
     <!-- Friend 2 -->
-    <rect x="58" y="112" width="26" height="40" rx="6" fill="#FFD24A" stroke="#0A1A33" stroke-width="4"/>
-    <circle cx="71" cy="97" r="14" fill="#FFF8E8" stroke="#0A1A33" stroke-width="4"/>
+    <rect x="58" y="112" width="26" height="40" rx="6" fill="#FFC93C" stroke="#0A1A33" stroke-width="4"/>
+    <circle cx="71" cy="97" r="14" fill="#FFF1D6" stroke="#0A1A33" stroke-width="4"/>
     <path d="M 57 92 Q 71 80 85 92" stroke="#0A1A33" stroke-width="4" fill="none" stroke-linecap="round"/>
     <circle cx="66" cy="97" r="1.8" fill="#0A1A33"/>
     <circle cx="76" cy="97" r="1.8" fill="#0A1A33"/>
 
     <!-- LUDVIG (center) - big curly hair + crown -->
-    <rect x="115" y="108" width="30" height="44" rx="6" fill="#FF9377" stroke="#0A1A33" stroke-width="4"/>
-    <circle cx="130" cy="92" r="16" fill="#FFF8E8" stroke="#0A1A33" stroke-width="4"/>
-    <circle cx="118" cy="82" r="10" fill="#FFD24A" stroke="#0A1A33" stroke-width="3"/>
-    <circle cx="130" cy="76" r="11" fill="#FFD24A" stroke="#0A1A33" stroke-width="3"/>
-    <circle cx="142" cy="82" r="10" fill="#FFD24A" stroke="#0A1A33" stroke-width="3"/>
-    <circle cx="115" cy="92" r="7" fill="#FFD24A" stroke="#0A1A33" stroke-width="3"/>
-    <circle cx="145" cy="92" r="7" fill="#FFD24A" stroke="#0A1A33" stroke-width="3"/>
+    <rect x="115" y="108" width="30" height="44" rx="6" fill="#FF7A4D" stroke="#0A1A33" stroke-width="4"/>
+    <circle cx="130" cy="92" r="16" fill="#FFF1D6" stroke="#0A1A33" stroke-width="4"/>
+    <circle cx="118" cy="82" r="10" fill="#FFC93C" stroke="#0A1A33" stroke-width="3"/>
+    <circle cx="130" cy="76" r="11" fill="#FFC93C" stroke="#0A1A33" stroke-width="3"/>
+    <circle cx="142" cy="82" r="10" fill="#FFC93C" stroke="#0A1A33" stroke-width="3"/>
+    <circle cx="115" cy="92" r="7" fill="#FFC93C" stroke="#0A1A33" stroke-width="3"/>
+    <circle cx="145" cy="92" r="7" fill="#FFC93C" stroke="#0A1A33" stroke-width="3"/>
     <circle cx="124" cy="94" r="1.8" fill="#0A1A33"/>
     <circle cx="136" cy="94" r="1.8" fill="#0A1A33"/>
     <path d="M 124 100 Q 130 105 136 100" stroke="#0A1A33" stroke-width="2.5" fill="none" stroke-linecap="round"/>
     <!-- Crown -->
-    <polygon points="115,66 122,52 130,60 138,52 145,66" fill="#F0B12B" stroke="#0A1A33" stroke-width="3" stroke-linejoin="round"/>
+    <polygon points="115,66 122,52 130,60 138,52 145,66" fill="#FFC93C" stroke="#0A1A33" stroke-width="3" stroke-linejoin="round"/>
     <circle cx="122" cy="52" r="2.5" fill="#0A1A33"/>
     <circle cx="130" cy="60" r="2.5" fill="#0A1A33"/>
     <circle cx="138" cy="52" r="2.5" fill="#0A1A33"/>
 
     <!-- Friend 4 -->
-    <rect x="176" y="112" width="26" height="40" rx="6" fill="#6BB0F0" stroke="#0A1A33" stroke-width="4"/>
-    <circle cx="189" cy="97" r="14" fill="#FFF8E8" stroke="#0A1A33" stroke-width="4"/>
+    <rect x="176" y="112" width="26" height="40" rx="6" fill="#FFB3C7" stroke="#0A1A33" stroke-width="4"/>
+    <circle cx="189" cy="97" r="14" fill="#FFF1D6" stroke="#0A1A33" stroke-width="4"/>
     <ellipse cx="189" cy="86" rx="14" ry="6" fill="#0A1A33"/>
     <circle cx="184" cy="97" r="1.8" fill="#0A1A33"/>
     <circle cx="194" cy="97" r="1.8" fill="#0A1A33"/>
 
     <!-- Friend 5 (far right) -->
-    <rect x="220" y="115" width="26" height="40" rx="6" fill="#B8A3FF" stroke="#0A1A33" stroke-width="4"/>
-    <circle cx="233" cy="100" r="14" fill="#FFF8E8" stroke="#0A1A33" stroke-width="4"/>
+    <rect x="220" y="115" width="26" height="40" rx="6" fill="#4FB8E6" stroke="#0A1A33" stroke-width="4"/>
+    <circle cx="233" cy="100" r="14" fill="#FFF1D6" stroke="#0A1A33" stroke-width="4"/>
     <circle cx="228" cy="98" r="1.8" fill="#0A1A33"/>
     <circle cx="238" cy="98" r="1.8" fill="#0A1A33"/>
   </svg>
 
   <!-- Some floating sparkle stickers for extra groovy energy -->
-  <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" style="top:18%;left:55%;opacity:.25;transform:rotate(15deg);width:40px;height:40px">
-    <path d="M 20 4 L 23 17 L 36 20 L 23 23 L 20 36 L 17 23 L 4 20 L 17 17 Z" fill="#FFD24A" stroke="#0A1A33" stroke-width="3" stroke-linejoin="round"/>
+  <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" style="top:18%;left:55%;opacity:.6;transform:rotate(15deg);width:min(40px,9vw);height:min(40px,9vw)">
+    <path d="M 20 4 L 23 17 L 36 20 L 23 23 L 20 36 L 17 23 L 4 20 L 17 17 Z" fill="#FFC93C" stroke="#0A1A33" stroke-width="3" stroke-linejoin="round"/>
   </svg>
-  <svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg" style="top:64%;left:10%;opacity:.22;transform:rotate(-20deg);width:30px;height:30px">
-    <path d="M 15 3 L 17 13 L 27 15 L 17 17 L 15 27 L 13 17 L 3 15 L 13 13 Z" fill="#FF9377" stroke="#0A1A33" stroke-width="2.5" stroke-linejoin="round"/>
+  <svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg" style="top:64%;left:10%;opacity:.55;transform:rotate(-20deg);width:min(30px,7vw);height:min(30px,7vw)">
+    <path d="M 15 3 L 17 13 L 27 15 L 17 17 L 15 27 L 13 17 L 3 15 L 13 13 Z" fill="#FF7A4D" stroke="#0A1A33" stroke-width="2.5" stroke-linejoin="round"/>
   </svg>
-  <svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg" style="top:8%;left:8%;opacity:.20;transform:rotate(5deg);width:25px;height:25px">
-    <path d="M 15 3 L 17 13 L 27 15 L 17 17 L 15 27 L 13 17 L 3 15 L 13 13 Z" fill="#6BB0F0" stroke="#0A1A33" stroke-width="2.5" stroke-linejoin="round"/>
+  <svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg" style="top:8%;left:8%;opacity:.55;transform:rotate(5deg);width:min(25px,6vw);height:min(25px,6vw)">
+    <path d="M 15 3 L 17 13 L 27 15 L 17 17 L 15 27 L 13 17 L 3 15 L 13 13 Z" fill="#4FB8E6" stroke="#0A1A33" stroke-width="2.5" stroke-linejoin="round"/>
   </svg>
 </div>
 
