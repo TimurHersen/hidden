@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>COLOGNE 🍩</title>
+<title>Cologne 🍩</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Fredoka:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -11,8 +11,8 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     /* — Sky & paper — */
-    --bg:        #B5DDFF;
-    --bg-deep:   #91C7F5;
+    --bg:        #FFA8C0;
+    --bg-deep:   #FF8FB0;
     --card:      #FFF8E8;
     --card-soft: #FFFEF7;
 
@@ -100,15 +100,15 @@
   }
   .header h1 {
     font-family: var(--font-display);
-    font-size: 112px;
+    font-size: 64px;
     font-weight: 400;
     line-height: 0.95;
     color: var(--card);
-    -webkit-text-stroke: 4px var(--ink);
-    text-stroke: 4px var(--ink);
-    letter-spacing: 4px;
+    -webkit-text-stroke: 3.5px var(--ink);
+    text-stroke: 3.5px var(--ink);
+    letter-spacing: 3px;
     margin-bottom: 16px;
-    text-shadow: 6px 6px 0 var(--ink);
+    text-shadow: 5px 5px 0 var(--ink);
     transform: rotate(-1deg);
   }
   .header-rule {
@@ -713,7 +713,7 @@
   }
 
   @media (max-width: 480px) {
-    .header h1 { font-size: 84px; }
+    .header h1 { font-size: 44px; }
     .day-label { font-size: 22px; }
     .bull-row { grid-template-columns: 1fr; }
   }
@@ -726,34 +726,51 @@
 
   <!-- Bike to Köln — top right -->
   <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="right:-30px;top:40px;opacity:.22;transform:rotate(6deg);width:230px;height:230px">
+    <!-- Speed lines (behind everything) -->
+    <g stroke="#0A1A33" stroke-width="4" stroke-linecap="round">
+      <line x1="0" y1="118" x2="22" y2="118"/>
+      <line x1="-2" y1="138" x2="18" y2="138"/>
+      <line x1="3" y1="158" x2="20" y2="158"/>
+    </g>
     <!-- Wheels -->
-    <circle cx="48" cy="142" r="30" fill="#FFF8E8" stroke="#0A1A33" stroke-width="5"/>
-    <circle cx="48" cy="142" r="6" fill="#0A1A33"/>
-    <circle cx="148" cy="142" r="30" fill="#FFF8E8" stroke="#0A1A33" stroke-width="5"/>
-    <circle cx="148" cy="142" r="6" fill="#0A1A33"/>
-    <!-- Spokes (a few) -->
-    <line x1="48" y1="118" x2="48" y2="166" stroke="#0A1A33" stroke-width="2.5"/>
-    <line x1="24" y1="142" x2="72" y2="142" stroke="#0A1A33" stroke-width="2.5"/>
-    <line x1="148" y1="118" x2="148" y2="166" stroke="#0A1A33" stroke-width="2.5"/>
-    <line x1="124" y1="142" x2="172" y2="142" stroke="#0A1A33" stroke-width="2.5"/>
-    <!-- Frame (chunky) -->
-    <path d="M 48 142 L 100 96 L 148 142" stroke="#2C7DD1" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M 100 96 L 80 142" stroke="#2C7DD1" stroke-width="9" fill="none" stroke-linecap="round"/>
-    <path d="M 100 96 L 110 58" stroke="#2C7DD1" stroke-width="8" fill="none" stroke-linecap="round"/>
-    <!-- Handlebars -->
-    <line x1="100" y1="58" x2="126" y2="58" stroke="#0A1A33" stroke-width="6" stroke-linecap="round"/>
-    <!-- Seat -->
-    <ellipse cx="77" cy="88" rx="14" ry="5" fill="#0A1A33"/>
-    <!-- Rider head with big curls -->
-    <circle cx="103" cy="42" r="12" fill="#FFF8E8" stroke="#0A1A33" stroke-width="4"/>
-    <circle cx="95" cy="34" r="8" fill="#FFD24A" stroke="#0A1A33" stroke-width="3"/>
-    <circle cx="105" cy="28" r="9" fill="#FFD24A" stroke="#0A1A33" stroke-width="3"/>
-    <circle cx="116" cy="34" r="8" fill="#FFD24A" stroke="#0A1A33" stroke-width="3"/>
-    <circle cx="93" cy="42" r="6" fill="#FFD24A" stroke="#0A1A33" stroke-width="3"/>
-    <circle cx="118" cy="42" r="6" fill="#FFD24A" stroke="#0A1A33" stroke-width="3"/>
-    <!-- Speed lines -->
-    <line x1="3" y1="100" x2="22" y2="100" stroke="#0A1A33" stroke-width="4" stroke-linecap="round"/>
-    <line x1="0" y1="120" x2="18" y2="120" stroke="#0A1A33" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="55" cy="150" r="32" fill="#FFF8E8" stroke="#0A1A33" stroke-width="5"/>
+    <circle cx="155" cy="150" r="32" fill="#FFF8E8" stroke="#0A1A33" stroke-width="5"/>
+    <!-- Spokes -->
+    <g stroke="#0A1A33" stroke-width="2.5" stroke-linecap="round">
+      <line x1="55" y1="122" x2="55" y2="178"/>
+      <line x1="27" y1="150" x2="83" y2="150"/>
+      <line x1="36" y1="131" x2="74" y2="169"/>
+      <line x1="36" y1="169" x2="74" y2="131"/>
+      <line x1="155" y1="122" x2="155" y2="178"/>
+      <line x1="127" y1="150" x2="183" y2="150"/>
+      <line x1="136" y1="131" x2="174" y2="169"/>
+      <line x1="136" y1="169" x2="174" y2="131"/>
+    </g>
+    <!-- Hubs -->
+    <circle cx="55" cy="150" r="6" fill="#0A1A33"/>
+    <circle cx="155" cy="150" r="6" fill="#0A1A33"/>
+    <!-- Frame (chunky diamond) -->
+    <line x1="55" y1="150" x2="100" y2="135" stroke="#2C7DD1" stroke-width="10" stroke-linecap="round"/>
+    <line x1="55" y1="150" x2="95" y2="78" stroke="#2C7DD1" stroke-width="10" stroke-linecap="round"/>
+    <line x1="100" y1="135" x2="95" y2="78" stroke="#2C7DD1" stroke-width="10" stroke-linecap="round"/>
+    <line x1="100" y1="135" x2="138" y2="80" stroke="#2C7DD1" stroke-width="10" stroke-linecap="round"/>
+    <line x1="95" y1="78" x2="138" y2="80" stroke="#2C7DD1" stroke-width="10" stroke-linecap="round"/>
+    <line x1="138" y1="80" x2="155" y2="150" stroke="#2C7DD1" stroke-width="10" stroke-linecap="round"/>
+    <!-- Seat post + saddle -->
+    <line x1="95" y1="78" x2="95" y2="60" stroke="#0A1A33" stroke-width="5" stroke-linecap="round"/>
+    <ellipse cx="95" cy="56" rx="14" ry="5" fill="#0A1A33"/>
+    <!-- Handlebar stem + bars -->
+    <line x1="138" y1="80" x2="142" y2="52" stroke="#0A1A33" stroke-width="5" stroke-linecap="round"/>
+    <line x1="126" y1="50" x2="156" y2="50" stroke="#0A1A33" stroke-width="6" stroke-linecap="round"/>
+    <!-- Grips -->
+    <circle cx="126" cy="50" r="4" fill="#FFD24A" stroke="#0A1A33" stroke-width="2.5"/>
+    <circle cx="156" cy="50" r="4" fill="#FFD24A" stroke="#0A1A33" stroke-width="2.5"/>
+    <!-- Pedal crank + pedals -->
+    <circle cx="100" cy="135" r="6" fill="#0A1A33"/>
+    <line x1="100" y1="135" x2="88" y2="148" stroke="#0A1A33" stroke-width="4" stroke-linecap="round"/>
+    <line x1="100" y1="135" x2="112" y2="122" stroke="#0A1A33" stroke-width="4" stroke-linecap="round"/>
+    <rect x="82" y="146" width="14" height="5" rx="2" fill="#FFD24A" stroke="#0A1A33" stroke-width="2"/>
+    <rect x="106" y="118" width="14" height="5" rx="2" fill="#FFD24A" stroke="#0A1A33" stroke-width="2"/>
   </svg>
 
   <!-- Cathedral — bottom left -->
@@ -783,36 +800,41 @@
     <rect x="121" y="180" width="14" height="35" rx="7" fill="#0A1A33"/>
   </svg>
 
-  <!-- Beer glasses — mid right -->
+  <!-- Beer mugs — mid right -->
   <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="right:-20px;top:42%;opacity:.20;transform:rotate(-14deg);width:170px;height:170px">
-    <!-- Left glass tilted -->
-    <g transform="rotate(-10, 45, 110)">
-      <rect x="28" y="60" width="36" height="95" rx="6" fill="#FFD24A" stroke="#0A1A33" stroke-width="5"/>
-      <rect x="32" y="64" width="28" height="18" rx="4" fill="#FFF8E8" stroke="#0A1A33" stroke-width="3"/>
-      <path d="M 64 80 Q 82 105 64 135" fill="none" stroke="#0A1A33" stroke-width="5" stroke-linecap="round"/>
-      <circle cx="42" cy="100" r="3" fill="#FFF8E8" opacity="0.6"/>
-      <circle cx="50" cy="115" r="2.5" fill="#FFF8E8" opacity="0.6"/>
+    <!-- Splash sparkles at top center (where they clink) -->
+    <g stroke="#0A1A33" stroke-width="3.5" stroke-linecap="round">
+      <line x1="100" y1="22" x2="100" y2="38"/>
+      <line x1="78" y1="36" x2="92" y2="40"/>
+      <line x1="108" y1="40" x2="122" y2="36"/>
+      <line x1="84" y1="18" x2="94" y2="28"/>
+      <line x1="106" y1="28" x2="116" y2="18"/>
     </g>
-    <!-- Center glass (tallest) -->
-    <rect x="84" y="44" width="36" height="112" rx="6" fill="#FFD24A" stroke="#0A1A33" stroke-width="5"/>
-    <rect x="88" y="48" width="28" height="20" rx="4" fill="#FFF8E8" stroke="#0A1A33" stroke-width="3"/>
-    <path d="M 120 68 Q 140 110 120 140" fill="none" stroke="#0A1A33" stroke-width="5" stroke-linecap="round"/>
-    <circle cx="98" cy="100" r="3" fill="#FFF8E8" opacity="0.7"/>
-    <circle cx="106" cy="120" r="2.5" fill="#FFF8E8" opacity="0.7"/>
-    <!-- Right glass tilted -->
-    <g transform="rotate(10, 155, 110)">
-      <rect x="138" y="60" width="36" height="95" rx="6" fill="#FFD24A" stroke="#0A1A33" stroke-width="5"/>
-      <rect x="142" y="64" width="28" height="18" rx="4" fill="#FFF8E8" stroke="#0A1A33" stroke-width="3"/>
-      <path d="M 138 80 Q 120 105 138 135" fill="none" stroke="#0A1A33" stroke-width="5" stroke-linecap="round"/>
-      <circle cx="160" cy="110" r="3" fill="#FFF8E8" opacity="0.6"/>
+    <!-- Left mug (tilted right, cheering) -->
+    <g transform="rotate(-12, 55, 110)">
+      <!-- Body -->
+      <rect x="35" y="68" width="42" height="92" rx="6" fill="#FFD24A" stroke="#0A1A33" stroke-width="5"/>
+      <!-- Wobbly foam top -->
+      <path d="M 35 74 Q 40 56 48 68 Q 56 52 64 68 Q 72 56 77 74 L 77 80 L 35 80 Z" fill="#FFF8E8" stroke="#0A1A33" stroke-width="4" stroke-linejoin="round"/>
+      <!-- Big rounded handle on the outside (left) -->
+      <path d="M 35 92 Q 14 92 14 122 Q 14 142 35 142" fill="none" stroke="#0A1A33" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+      <!-- Bubbles -->
+      <circle cx="50" cy="100" r="3" fill="#FFF8E8"/>
+      <circle cx="63" cy="115" r="2.5" fill="#FFF8E8"/>
+      <circle cx="52" cy="135" r="2" fill="#FFF8E8"/>
+      <circle cx="65" cy="142" r="2" fill="#FFF8E8"/>
     </g>
-    <!-- Sparkles -->
-    <g stroke="#0A1A33" stroke-width="3" stroke-linecap="round">
-      <line x1="100" y1="20" x2="100" y2="34"/>
-      <line x1="84" y1="28" x2="92" y2="28"/>
-      <line x1="108" y1="28" x2="116" y2="28"/>
+    <!-- Right mug (tilted left, cheering) -->
+    <g transform="rotate(12, 145, 110)">
+      <rect x="123" y="68" width="42" height="92" rx="6" fill="#FFD24A" stroke="#0A1A33" stroke-width="5"/>
+      <path d="M 123 74 Q 128 56 136 68 Q 144 52 152 68 Q 160 56 165 74 L 165 80 L 123 80 Z" fill="#FFF8E8" stroke="#0A1A33" stroke-width="4" stroke-linejoin="round"/>
+      <!-- Handle on the outside (right) -->
+      <path d="M 165 92 Q 186 92 186 122 Q 186 142 165 142" fill="none" stroke="#0A1A33" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="138" cy="100" r="3" fill="#FFF8E8"/>
+      <circle cx="151" cy="115" r="2.5" fill="#FFF8E8"/>
+      <circle cx="140" cy="135" r="2" fill="#FFF8E8"/>
+      <circle cx="153" cy="142" r="2" fill="#FFF8E8"/>
     </g>
-    <circle cx="100" cy="28" r="3" fill="#0A1A33"/>
   </svg>
 
   <!-- Axe target — top left -->
@@ -893,7 +915,7 @@
 <!-- ═══════════ HEADER ═══════════ -->
 <div class="header">
   <p class="header-eyebrow">Svensexa · Köln · 2026</p>
-  <h1>KBH</h1>
+  <h1>COLOGNE</h1>
   <div class="header-rule">
     <span></span>
     <span class="header-gem">★ ★ ★</span>
